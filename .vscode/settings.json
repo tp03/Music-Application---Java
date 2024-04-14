@@ -1,7 +1,13 @@
 {
-    "java.project.sourcePaths": ["src"],
+    "java.project.sourcePaths": [
+        "src"
+    ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ]
+        "lib/ojdbc11.jar",
+        "lib/ojdbc10.jar",
+        "lib/ucp.jar",
+        "lib/ojdbc8.jar"
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
 }
