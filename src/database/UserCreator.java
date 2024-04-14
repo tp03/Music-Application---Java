@@ -1,3 +1,5 @@
+package database;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,40 +13,36 @@ public class UserCreator {
     String name;
     String last_name;
     String username;
-    String email;
-    
-    void created_user(int id, String name, String last_name, String user_name, String email)
-    {
+    public String email;
+
+    void created_user(int id, String name, String last_name, String user_name, String email) {
         this.id = id;
         this.name = name;
         this.last_name = last_name;
         this.username = user_name;
-        if (email != null)
-        {
+        if (email != null) {
             this.email = email;
         }
         Connection connection = null;
-        try{
-            Class.forName("oracle.jdbc.driver.OracleDriver"); 
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
             String url = "jdbc:oracle:thin:@ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl";
             String usern = "tzalews1";
             String password = "tzalews1";
             connection = DriverManager.getConnection(url, usern, password);
-            if (connection != null)
-            {
+            if (connection != null) {
                 System.out.println("Successful");
-            }
-            else
+            } else
                 System.out.println("Error");
 
             String insert_query = "INSERT INTO app_user VALUES ("
-            + this.id + ", '" + this.name + "', '" + this.last_name
-            + "', '" + this.username + "', '" + this.email + "')";
+                    + this.id + ", '" + this.name + "', '" + this.last_name
+                    + "', '" + this.username + "', '" + this.email + "')";
 
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
 
             int rowsInserted = prepstat.executeUpdate();
-            
+
             if (rowsInserted > 0) {
                 System.out.println("G");
             } else {
@@ -55,17 +53,11 @@ public class UserCreator {
 
             connection.close();
 
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        catch (ClassNotFoundException e)
-        {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-
-    
 }
