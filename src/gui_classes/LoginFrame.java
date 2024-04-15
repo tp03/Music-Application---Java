@@ -14,7 +14,7 @@ public class LoginFrame extends JFrame {// inheriting JFrame
     private JButton move_to_register;
     public JButton registerbutton;
 
-    LoginFrame() {
+    public LoginFrame() {
         this.setSize(600, 800);
         this.setLocationRelativeTo(null);
 

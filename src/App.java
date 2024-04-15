@@ -6,7 +6,8 @@ import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import database.*;
-import gui_classes.*;
+import gui_classes.AppFrame;
+import gui_classes.LoginFrame;
 import objects.*;
 
 public class App {

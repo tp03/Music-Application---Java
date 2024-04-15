@@ -15,7 +15,7 @@ public class UserCreator {
     String username;
     public String email;
 
-    void created_user(int id, String name, String last_name, String user_name, String email) {
+    public void created_user(int id, String name, String last_name, String user_name, String email) {
         this.id = id;
         this.name = name;
         this.last_name = last_name;

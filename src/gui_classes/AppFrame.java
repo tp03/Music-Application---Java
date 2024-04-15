@@ -29,7 +29,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JButton pauseButton;
     private JButton returnButton;
 
-    AppFrame() {
+    public AppFrame() {
         this.imageIcon = new ImageIcon("assets/logo1.png");
         Image image = imageIcon.getImage();
         Image newImage = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
