@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -12,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class AppFrame extends JFrame implements ActionListener{
     private Color backgroundColor;
@@ -26,6 +28,9 @@ public class AppFrame extends JFrame implements ActionListener{
     private JButton skipButton;
     private JButton pauseButton;
     private JButton returnButton;
+    private JButton searchButton;
+    private JTextField searchField;
+    private Color panelColor;
     AppFrame(){
         this.imageIcon = new ImageIcon("assets/logo1.png");
         Image image = imageIcon.getImage();
@@ -51,9 +56,12 @@ public class AppFrame extends JFrame implements ActionListener{
         this.titleLabel = new JLabel(imageIcon);
         this.backgroundColor = new Color(230, 138, 0);
         this.textColor = new Color(0,0,0);
-        skipButton = new JButton(skipIcon);
-        pauseButton = new JButton(pauseIcon);
-        returnButton = new JButton(returnIcon);
+        this.panelColor = Color.blue; // set to blue for visibility
+        this.skipButton = new JButton(skipIcon);
+        this.pauseButton = new JButton(pauseIcon);
+        this.returnButton = new JButton(returnIcon);
+
+        this.searchButton = new JButton("Search");
 
         //Border border = BorderFactory.createLineBorder(Color.green,3);
         
@@ -71,6 +79,12 @@ public class AppFrame extends JFrame implements ActionListener{
         returnButton.addActionListener(this);
         returnButton.setBackground(Color.BLACK);
 
+        searchButton.setPreferredSize(new Dimension(120, 50));
+        searchButton.setFont(new Font("Arial", Font.BOLD, 18));
+        searchButton.setForeground(Color.WHITE);
+        searchButton.setBackground(Color.BLACK);
+        searchButton.addActionListener(this);
+
         // TITLE ACTIONS
         // titleLabel.setBorder(border);
         titleLabel.setText("SpotiSing");
@@ -83,21 +97,35 @@ public class AppFrame extends JFrame implements ActionListener{
         // titleLabel.setHorizontalAlignment(JLabel.CENTER);
         // titleLabel.setBounds(this.frameWidth/2-this.labelWidth/2, 0, labelWidth, labelWidth);
 
+        // SEARCH BAR ACTIONS
+        this.searchField = new JTextField();
+        searchField.setPreferredSize(new Dimension(400, 50));
+        searchField.setFont(new Font("Arial", Font.PLAIN, 18));
+        searchField.setForeground(Color.WHITE);
+        searchField.setBackground(Color.BLACK);
+
         // PANEL ACTIONS
         JPanel redPanel = new JPanel();
-        redPanel.setBackground(Color.red);
+        redPanel.setBackground(panelColor);
         redPanel.add(titleLabel);
         Dimension prefSize = redPanel.getPreferredSize();
         redPanel.setBounds(0, 0, prefSize.width, prefSize.height);
         
 
         JPanel bluePanel = new JPanel();
-        bluePanel.setBackground(Color.blue);
+        bluePanel.setBackground(panelColor);
         bluePanel.add(returnButton);
         bluePanel.add(pauseButton);
         bluePanel.add(skipButton);
         prefSize = bluePanel.getPreferredSize();
         bluePanel.setBounds(this.screenSize.width/2 - prefSize.width/2, this.screenSize.height-2*prefSize.height, prefSize.width, prefSize.height);
+
+        JPanel searchPanel = new JPanel();
+        searchPanel.setBackground(panelColor);
+        searchPanel.add(this.searchField, BorderLayout.CENTER);
+        searchPanel.add(this.searchButton, BorderLayout.EAST);
+        prefSize = searchPanel.getPreferredSize();
+        searchPanel.setBounds(this.screenSize.width/2 - prefSize.width/2,0,prefSize.width, prefSize.height);
 
 
         // FRAME ACTIONS
@@ -109,6 +137,7 @@ public class AppFrame extends JFrame implements ActionListener{
         //this.add(titleLabel);
         this.add(redPanel);
         this.add(bluePanel);
+        this.add(searchPanel);
         this.getContentPane().setBackground(backgroundColor);
     }
 
@@ -125,6 +154,11 @@ public class AppFrame extends JFrame implements ActionListener{
         else if(e.getSource()==returnButton)
         {
             System.out.println("return");
+        }
+        else if(e.getSource()==searchButton)
+        {
+            String searchTerm = this.searchField.getText();
+            System.out.println("Searching for: " + searchTerm);
         }
     }
 }
