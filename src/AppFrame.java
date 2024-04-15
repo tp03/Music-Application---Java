@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,8 +21,7 @@ public class AppFrame extends JFrame implements ActionListener{
     private ImageIcon skipIcon;
     private ImageIcon pauseIcon;
     private JLabel titleLabel;
-    private int frameWidth;
-    private int frameHeight;
+    private Dimension screenSize;
     private int buttonWidth;
     private JButton skipButton;
     private JButton pauseButton;
@@ -47,8 +47,6 @@ public class AppFrame extends JFrame implements ActionListener{
         newImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         this.pauseIcon = new ImageIcon(newImage);
 
-        this.frameWidth = 1000;
-        this.frameHeight = frameWidth;
         this.buttonWidth = 100;
         this.titleLabel = new JLabel(imageIcon);
         this.backgroundColor = new Color(230, 138, 0);
@@ -59,6 +57,9 @@ public class AppFrame extends JFrame implements ActionListener{
 
         //Border border = BorderFactory.createLineBorder(Color.green,3);
         
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        this.screenSize = toolkit.getScreenSize();
+
         // BUTTON ACTIONS
         skipButton.setPreferredSize(new Dimension(buttonWidth,buttonWidth));
         skipButton.addActionListener(this);
@@ -96,14 +97,14 @@ public class AppFrame extends JFrame implements ActionListener{
         bluePanel.add(pauseButton);
         bluePanel.add(skipButton);
         prefSize = bluePanel.getPreferredSize();
-        bluePanel.setBounds(frameWidth/2 - prefSize.width/2, frameHeight-prefSize.height-40, prefSize.width, prefSize.height);
+        bluePanel.setBounds(this.screenSize.width/2 - prefSize.width/2, this.screenSize.height-2*prefSize.height, prefSize.width, prefSize.height);
 
 
         // FRAME ACTIONS
         this.setTitle("SpotiSing");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setResizable(false);
-        this.setSize(frameWidth,frameWidth);
         this.setLayout(null);
         //this.add(titleLabel);
         this.add(redPanel);
