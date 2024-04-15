@@ -73,7 +73,10 @@ public class AppFrame extends JFrame implements ActionListener {
 
         // TITLE ACTIONS
         // titleLabel.setBorder(border);
-        titleLabel.setText("SpotiSing");
+        UserReader reader = new UserReader("test123"); // testowy logowanie
+        Spotify_user user = reader.searchDB();
+
+        titleLabel.setText(user.name);
         // titleLabel.setHorizontalTextPosition(JLabel.CENTER);
         // titleLabel.setVerticalTextPosition(JLabel.TOP);
         titleLabel.setForeground(textColor);
@@ -101,7 +104,7 @@ public class AppFrame extends JFrame implements ActionListener {
                 prefSize.height);
 
         // FRAME ACTIONS
-        this.setTitle("SpotiSing");
+        this.setTitle(user.name);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setSize(frameWidth, frameWidth);

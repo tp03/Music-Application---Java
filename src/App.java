@@ -10,11 +10,11 @@ public class App {
     static AppFrame appFrame = new AppFrame();
     static LoginFrame login = new LoginFrame();
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         // UserCreator próba = new UserCreator();
         // próba.created_user(2, "Tomek", "Zalewski", "tp03", "tzal@gmail.com");
-        
+
         login.setVisible(true);
         switch_frames();
 

@@ -115,17 +115,20 @@ public class LoginFrame extends JFrame {// inheriting JFrame
         GridBagConstraints gbc = create_gbc();
 
         // Labels
-        JLabel l1, l2, l3;
-        l1 = new JLabel("Username:");
+        JLabel l1, l2, l3, l4;
+        l1 = new JLabel("Name:");
         l1.setBounds(50, 50, 100, 30);
         l2 = new JLabel("Login:");
         l2.setBounds(50, 50, 100, 30);
         l3 = new JLabel("Password:");
         l3.setBounds(50, 50, 100, 30);
+        l4 = new JLabel("Email:");
+        l4.setBounds(50, 50, 100, 30);
 
         // InputFields
-        JTextField username_input = new JTextField();
+        JTextField password_input = new JTextField();
         JTextField login_input = new JTextField();
+        JTextField email_input = new JTextField();
         JPasswordField passwordField = new JPasswordField();
         this.registerbutton = new JButton("Create user");
 
@@ -135,7 +138,9 @@ public class LoginFrame extends JFrame {// inheriting JFrame
         JPanel main_objts = new JPanel(new GridBagLayout());
 
         main_objts.add(l1, gbc);
-        main_objts.add(username_input, gbc);
+        main_objts.add(password_input, gbc);
+        main_objts.add(l4, gbc);
+        main_objts.add(email_input, gbc);
         main_objts.add(l2, gbc);
         main_objts.add(login_input, gbc);
         main_objts.add(l3, gbc);
@@ -145,6 +150,22 @@ public class LoginFrame extends JFrame {// inheriting JFrame
 
         register_panel.add(main_objts, gbc);
 
+    }
+
+    void create_user_action(JButton button, JTextField name_field, JTextField email_field, JTextField login_field,
+            JPasswordField password_field) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = name_field.getText();
+                String login = login_field.getText();
+                String password = new String(password_field.getPassword());
+                String email = email_field.getText();
+
+                UserCreator new_user = new UserCreator();
+                new_user.created_user(1, name, login, password, email);
+            }
+        });
     }
 
     public static void main(String[] args) {
