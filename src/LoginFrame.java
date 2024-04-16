@@ -189,8 +189,8 @@ public class LoginFrame extends JFrame {// inheriting JFrame
                 String password = new String(password_field.getPassword());
                 String email = email_field.getText();
 
-                UserCreator new_user = new UserCreator();
-                new_user.created_user(1, name, login, password, email);
+                // UserCreator new_user = new UserCreator();
+                // new_user.created_user(1, name, login, password, email);
             }
         });
     }
