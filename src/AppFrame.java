@@ -13,6 +13,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.*;
+
 import javax.swing.JComponent;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -30,6 +32,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -54,6 +57,9 @@ public class AppFrame extends JFrame implements ActionListener {
     private Color panelColor;
     private Color panelColor2;
     private int songWidth;
+    private Clip clip;
+    private JProgressBar progressBar;
+    private ActionListener timerAction;
     AppFrame(){
         this.imageIcon = new ImageIcon("assets/logo1.png");
         Image image = imageIcon.getImage();
@@ -180,8 +186,29 @@ public class AppFrame extends JFrame implements ActionListener {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         prefSize = scrollPane.getPreferredSize();
         scrollPane.setBounds(this.screenSize.width/2 - prefSize.width/2,searchprefSize.height,prefSize.width, 
-            this.screenSize.height-searchprefSize.height*5);
+            this.screenSize.height-searchprefSize.height*6);
         //scrollPane.setBounds(this.screenSize.width/2 - prefSize.width/2,searchprefSize.height,prefSize.width, prefSize.height);
+
+        // PROGRESS BAR ACTIONS
+        this.progressBar = new JProgressBar(0, 100);
+        this.progressBar.setStringPainted(true);
+        this.progressBar.setPreferredSize(new Dimension(songWidth, 50));
+        this.timerAction = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Update the progress bar based on the current position of the clip
+                if (clip != null && AppFrame.this.clip.isOpen() && AppFrame.this.clip.isRunning()) {
+                    long currentPosition = AppFrame.this.clip.getMicrosecondPosition();
+                    long totalLength = AppFrame.this.clip.getMicrosecondLength();
+                    double progress = (double) currentPosition / totalLength;
+                    AppFrame.this.progressBar.setValue((int) (progress * 100)); // Set the progress bar value
+                }
+            }
+        };
+        JPanel progressBarPanel = new JPanel();
+        progressBarPanel.setBackground(panelColor);
+        progressBarPanel.add(progressBar);
+        prefSize = progressBarPanel.getPreferredSize();
+        progressBarPanel.setBounds(this.screenSize.width/2 - prefSize.width/2, this.screenSize.height - searchprefSize.height*5, prefSize.width, prefSize.height);
 
         // FRAME ACTIONS
         this.setTitle("SpotiSing");
@@ -195,27 +222,33 @@ public class AppFrame extends JFrame implements ActionListener {
         this.add(searchPanel);
         //this.add(songListPanel, BorderLayout.CENTER);
         this.add(scrollPane);
+        this.add(progressBarPanel);
         this.getContentPane().setBackground(backgroundColor);
     }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == skipButton) {
             System.out.println("skip");
+            long clipLength = this.clip.getMicrosecondLength();
+            this.clip.setMicrosecondPosition(clipLength);
         }
         else if(e.getSource()==pauseButton)
         {
             if (pauseButton.getIcon().equals(pauseIcon)) {
                 pauseButton.setIcon(playIcon);
                 System.out.println("pause");
+                this.clip.stop();
             } else {
                 pauseButton.setIcon(pauseIcon);
                 System.out.println("play");
+                this.clip.start();
             }
             
         }
         else if(e.getSource()==returnButton)
         {
             System.out.println("return");
+            this.clip.setMicrosecondPosition(0);
         }
         else if(e.getSource()==searchButton)
         {
@@ -295,9 +328,12 @@ public class AppFrame extends JFrame implements ActionListener {
                         // Here's a simple example using the Java Sound API:
                         File recordingFile = new File(recordingPath);
                         AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
-                        Clip clip = AudioSystem.getClip();
-                        clip.open(audioStream);
-                        clip.start();
+                        AppFrame.this.clip  = AudioSystem.getClip();
+                        AppFrame.this.clip .open(audioStream);
+                        AppFrame.this.clip .start();
+
+                        Timer timer = new Timer(100, timerAction);
+                        timer.start(); 
                     } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                         ex.printStackTrace();
                     }
@@ -307,6 +343,6 @@ public class AppFrame extends JFrame implements ActionListener {
 
         return songPanel;
     }
-
+    
 }
 
