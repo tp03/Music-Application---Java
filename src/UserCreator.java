@@ -14,9 +14,8 @@ public class UserCreator {
     private String email;
     private String pass;
     
-    void created_user(int id, String name, String last_name, String user_name, String email, String passw)
+    void created_user(String name, String last_name, String user_name, String email, String passw)
     {
-        this.id = id;
         this.name = name;
         this.last_name = last_name;
         this.username = user_name;
@@ -43,9 +42,20 @@ public class UserCreator {
             + this.id + ", '" + this.name + "', '" + this.last_name
             + "', '" + this.username + "', '" + this.email + "', '" + this.pass + "')";
 
+            String in_query2 = "SELECT COUNT(*) FROM app_user";
+            
+            Statement stmt = connection.createStatement();
+
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
 
             int rowsInserted = prepstat.executeUpdate();
+
+            ResultSet resultSet = stmt.executeQuery(in_query2);
+
+            while (resultSet.next()) {
+
+                id = resultSet.getInt("COUNT(*)") + 1;
+            }
             
             if (rowsInserted > 0) {
                 System.out.println("G");

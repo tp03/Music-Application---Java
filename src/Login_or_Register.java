@@ -10,6 +10,7 @@ public class Login_or_Register {
 
     private LoginFrame loginFrame;
     private AppFrame appFrame;
+    private Spotify_user logged_user;
 
     Login_or_Register(LoginFrame loginFrame, AppFrame AppFrame, JButton loginbutton, JButton registerbutton) {
         this.appFrame = AppFrame;
@@ -39,14 +40,18 @@ public class Login_or_Register {
 
     void register() {
         Map<String, String> data = loginFrame.collect_register_data();
-        System.out.println(data.get("email"));
+        UserCreator user_creator = new UserCreator();
+        user_creator.created_user(data.get("name"), data.get("surname"), data.get("nickname"), data.get("email"), data.get("password"));
+        UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
+        this.logged_user = user_reader.searchDB();
         loginFrame.dispose();
         appFrame.setVisible(true);
     }
 
     void login() {
         Map<String, String> data = loginFrame.collect_login_data();
-        System.out.println(data.get("password"));
+        UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
+        this.logged_user = user_reader.searchDB();
         loginFrame.dispose();
         appFrame.setVisible(true);
     }
