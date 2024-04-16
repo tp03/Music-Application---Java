@@ -1,6 +1,6 @@
 # Spotysing
 
-Spot & Sing is an innovative application designed to allow users to enjoy their own recorded music. Here's a refined overview of its features and functionality:
+Spotysing is an innovative application designed to allow users to enjoy their own recorded music. Here's a refined overview of its features and functionality:
 
 After start-off, users are prompted to create an account by providing essential details such as name, surname, email address, and password. This ensures a personalized experience and secure access to the app's features. Users can curate their own playlists; consists of: song titles, artist information, thumbnail images, and MP3 recording files. These playlists are seamlessly saved in the app's database for easy access and playback.
 
