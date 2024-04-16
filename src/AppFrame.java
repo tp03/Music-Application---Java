@@ -9,7 +9,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -18,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
@@ -28,6 +28,7 @@ public class AppFrame extends JFrame implements ActionListener{
     private ImageIcon returnIcon;
     private ImageIcon skipIcon;
     private ImageIcon pauseIcon;
+    private ImageIcon playIcon;
     private ImageIcon searchIcon;
     private JLabel titleLabel;
     private Dimension screenSize;
@@ -60,6 +61,11 @@ public class AppFrame extends JFrame implements ActionListener{
         image = pauseIcon.getImage();
         newImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         this.pauseIcon = new ImageIcon(newImage);
+
+        this.playIcon = new ImageIcon("assets/play.png");
+        image = this.playIcon.getImage();
+        newImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        this.playIcon = new ImageIcon(newImage);
 
         this.searchIcon = new ImageIcon("assets/search.png");
         image = this.searchIcon.getImage();
@@ -157,9 +163,13 @@ public class AppFrame extends JFrame implements ActionListener{
             // spacerPanel.setBackground(panelColor);
             // songListPanel.add(spacerPanel);
         }
-        prefSize = songListPanel.getPreferredSize();
-        songListPanel.setBounds(this.screenSize.width/2 - prefSize.width/2,searchprefSize.height,prefSize.width, prefSize.height);
         
+        JScrollPane scrollPane = new JScrollPane(songListPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        prefSize = scrollPane.getPreferredSize();
+        scrollPane.setBounds(this.screenSize.width/2 - prefSize.width/2,searchprefSize.height,prefSize.width, 
+            this.screenSize.height-searchprefSize.height*5);
+        //scrollPane.setBounds(this.screenSize.width/2 - prefSize.width/2,searchprefSize.height,prefSize.width, prefSize.height);
 
         // FRAME ACTIONS
         this.setTitle("SpotiSing");
@@ -171,7 +181,8 @@ public class AppFrame extends JFrame implements ActionListener{
         this.add(redPanel);
         this.add(bluePanel);
         this.add(searchPanel);
-        this.add(songListPanel, BorderLayout.CENTER);
+        //this.add(songListPanel, BorderLayout.CENTER);
+        this.add(scrollPane);
         this.getContentPane().setBackground(backgroundColor);
     }
 
@@ -183,7 +194,14 @@ public class AppFrame extends JFrame implements ActionListener{
         }
         else if(e.getSource()==pauseButton)
         {
-            System.out.println("pause");
+            if (pauseButton.getIcon().equals(pauseIcon)) {
+                pauseButton.setIcon(playIcon);
+                System.out.println("pause");
+            } else {
+                pauseButton.setIcon(pauseIcon);
+                System.out.println("play");
+            }
+            
         }
         else if(e.getSource()==returnButton)
         {
@@ -198,6 +216,9 @@ public class AppFrame extends JFrame implements ActionListener{
 
     private ArrayList<Song> createSampleSongs() {
         ArrayList<Song> songs = new ArrayList<>();
+        songs.add(new Song("Song 1", "Zenek", "assets/zenek1.png"));
+        songs.add(new Song("Song 2", "Zenon", "assets/zenek2.jpg"));
+        songs.add(new Song("Song 3", "Martuniuk", "assets/zenek3.jpeg"));
         songs.add(new Song("Song 1", "Zenek", "assets/zenek1.png"));
         songs.add(new Song("Song 2", "Zenon", "assets/zenek2.jpg"));
         songs.add(new Song("Song 3", "Martuniuk", "assets/zenek3.jpeg"));
