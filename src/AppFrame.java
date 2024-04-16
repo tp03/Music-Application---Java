@@ -21,7 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-public class AppFrame extends JFrame implements ActionListener{
+public class AppFrame extends JFrame implements ActionListener {
     private Color backgroundColor;
     private Color textColor;
     private ImageIcon imageIcon;
@@ -51,7 +51,7 @@ public class AppFrame extends JFrame implements ActionListener{
         image = returnIcon.getImage();
         newImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         this.returnIcon = new ImageIcon(newImage);
-        
+
         this.skipIcon = new ImageIcon("assets/skip.png");
         image = skipIcon.getImage();
         newImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
@@ -91,13 +91,13 @@ public class AppFrame extends JFrame implements ActionListener{
         this.screenSize = toolkit.getScreenSize();
 
         // BUTTON ACTIONS
-        skipButton.setPreferredSize(new Dimension(buttonWidth,buttonWidth));
+        skipButton.setPreferredSize(new Dimension(buttonWidth, buttonWidth));
         skipButton.addActionListener(this);
         skipButton.setBackground(Color.BLACK);
-        pauseButton.setPreferredSize(new Dimension(buttonWidth,buttonWidth));
+        pauseButton.setPreferredSize(new Dimension(buttonWidth, buttonWidth));
         pauseButton.addActionListener(this);
         pauseButton.setBackground(Color.BLACK);
-        returnButton.setPreferredSize(new Dimension(buttonWidth,buttonWidth));
+        returnButton.setPreferredSize(new Dimension(buttonWidth, buttonWidth));
         returnButton.addActionListener(this);
         returnButton.setBackground(Color.BLACK);
 
@@ -113,7 +113,7 @@ public class AppFrame extends JFrame implements ActionListener{
         // titleLabel.setHorizontalTextPosition(JLabel.CENTER);
         // titleLabel.setVerticalTextPosition(JLabel.TOP);
         titleLabel.setForeground(textColor);
-        titleLabel.setFont(new Font("Monospaced",Font.PLAIN, 20));
+        titleLabel.setFont(new Font("Monospaced", Font.PLAIN, 20));
         // titleLabel.setIconTextGap(10);
         // titleLabel.setVerticalAlignment(JLabel.TOP);
         // titleLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -132,7 +132,6 @@ public class AppFrame extends JFrame implements ActionListener{
         redPanel.add(titleLabel);
         Dimension prefSize = redPanel.getPreferredSize();
         redPanel.setBounds(0, 0, prefSize.width, prefSize.height);
-        
 
         JPanel bluePanel = new JPanel();
         bluePanel.setBackground(panelColor);
@@ -177,7 +176,7 @@ public class AppFrame extends JFrame implements ActionListener{
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setResizable(false);
         this.setLayout(null);
-        //this.add(titleLabel);
+        // this.add(titleLabel);
         this.add(redPanel);
         this.add(bluePanel);
         this.add(searchPanel);
@@ -186,10 +185,8 @@ public class AppFrame extends JFrame implements ActionListener{
         this.getContentPane().setBackground(backgroundColor);
     }
 
-    public void actionPerformed(ActionEvent e)
-    {
-        if(e.getSource()==skipButton)
-        {
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == skipButton) {
             System.out.println("skip");
         }
         else if(e.getSource()==pauseButton)
