@@ -38,10 +38,6 @@ public class UserCreator {
             else
                 System.out.println("Error");
 
-            String insert_query = "INSERT INTO app_user VALUES ("
-            + this.id + ", '" + this.name + "', '" + this.last_name
-            + "', '" + this.username + "', '" + this.email + "', '" + this.pass + "')";
-
             String in_query2 = "SELECT COUNT(*) FROM app_user";
             
             Statement stmt = connection.createStatement();
@@ -50,9 +46,13 @@ public class UserCreator {
 
             while (resultSet.next()) {
 
-                id = resultSet.getInt("COUNT(*)") + 1;
+                this.id = resultSet.getInt("COUNT(*)") + 1;
             }
             
+            String insert_query = "INSERT INTO app_user VALUES ("
+            + this.id + ", '" + this.name + "', '" + this.last_name
+            + "', '" + this.username + "', '" + this.email + "', '" + this.pass + "')";
+
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
 
             int rowsInserted = prepstat.executeUpdate();
@@ -62,8 +62,6 @@ public class UserCreator {
             } else {
                 System.out.println("Nie G");
             }
-
-            connection.commit();
 
             connection.close();
 

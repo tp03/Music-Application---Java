@@ -44,3 +44,5 @@ SELECT COUNT(*) FROM app_user;
 DELETE FROM APP_USER;
 
 SELECT * FROM APP_USER;
+
+SELECT * FROM app_user WHERE (nick = 'tp03') AND (password = '12345');
