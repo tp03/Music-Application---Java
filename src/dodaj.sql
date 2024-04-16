@@ -8,9 +8,9 @@ SELECT * FROM SONG;
 
 INSERT INTO author VALUES (2, 'Zenon Martyniuk', 99999);
 
-INSERT INTO SONG_DATA VALUES (1, 'narazie_nic', 'recordings/gwiazda.mp3', 'assets/zenek1.png');
-INSERT INTO SONG_DATA VALUES (2, 'narazie_nic', 'recordings/gwiazda.mp3', 'assets/zenek2.png');
-INSERT INTO SONG_DATA VALUES (3, 'narazie_nic', 'recordings/gwiazda.mp3', 'assets/zenek3.png');
+INSERT INTO SONG_DATA VALUES (1, 'narazie_nic', 'recordings/chwile.mp3', 'assets/zenek1.png');
+INSERT INTO SONG_DATA VALUES (2, 'narazie_nic', 'recordings/gwiazda.mp3', 'assets/zenek2.jpg');
+INSERT INTO SONG_DATA VALUES (3, 'narazie_nic', 'recordings/gwiazda.mp3', 'assets/zenek3.jpeg');
 
 INSERT INTO SONG VALUES (1, 'Życie To Są Chwilę', 200, 1, 10000);
 INSERT INTO SONG VALUES (2, 'Przez Twe Oczy Zielone', 213, 2, 100010);
