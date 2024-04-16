@@ -178,6 +178,10 @@ public class AppFrame extends JFrame implements ActionListener {
         songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         songListPanel.setBackground(panelColor);
 
+        JPanel playlistListPanel = new JPanel(new GridLayout(0, 1));
+        playlistListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        playlistListPanel.setBackground(panelColor);
+
         ArrayList<Song> songs = createSampleSongs();
 
         for (Song song : songs) {
