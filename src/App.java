@@ -16,18 +16,7 @@ public class App {
         // próba.created_user(2, "Tomek", "Zalewski", "tp03", "tzal@gmail.com");
 
         login.setVisible(true);
-        switch_frames();
+        Login_or_Register LoginLogic = new Login_or_Register(login, appFrame, login.loginbutton, login.registerbutton);
 
     }
-
-    static void switch_frames() {
-        login.registerbutton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                login.dispose();
-                appFrame.setVisible(true);
-            }
-        });
-    }
-
 }

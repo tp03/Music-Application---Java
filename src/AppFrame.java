@@ -60,7 +60,8 @@ public class AppFrame extends JFrame implements ActionListener {
     private Clip clip;
     private JProgressBar progressBar;
     private ActionListener timerAction;
-    AppFrame(){
+
+    AppFrame() {
         this.imageIcon = new ImageIcon("assets/logo1.png");
         Image image = imageIcon.getImage();
         Image newImage = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
@@ -95,7 +96,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.songWidth = 600;
         this.titleLabel = new JLabel(imageIcon);
         this.backgroundColor = new Color(230, 138, 0);
-        this.textColor = new Color(0,0,0);
+        this.textColor = new Color(0, 0, 0);
         this.panelColor = Color.blue; // set to blue for visibility
         this.panelColor2 = panelColor;
         this.skipButton = new JButton(skipIcon);
@@ -104,8 +105,8 @@ public class AppFrame extends JFrame implements ActionListener {
 
         this.searchButton = new JButton(searchIcon);
 
-        //Border border = BorderFactory.createLineBorder(Color.green,3);
-        
+        // Border border = BorderFactory.createLineBorder(Color.green,3);
+
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         this.screenSize = toolkit.getScreenSize();
 
@@ -139,7 +140,8 @@ public class AppFrame extends JFrame implements ActionListener {
         // titleLabel.setIconTextGap(10);
         // titleLabel.setVerticalAlignment(JLabel.TOP);
         // titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        // titleLabel.setBounds(this.frameWidth/2-this.labelWidth/2, 0, labelWidth, labelWidth);
+        // titleLabel.setBounds(this.frameWidth/2-this.labelWidth/2, 0, labelWidth,
+        // labelWidth);
 
         // SEARCH BAR ACTIONS
         this.searchField = new JTextField();
@@ -161,14 +163,16 @@ public class AppFrame extends JFrame implements ActionListener {
         bluePanel.add(pauseButton);
         bluePanel.add(skipButton);
         prefSize = bluePanel.getPreferredSize();
-        bluePanel.setBounds(this.screenSize.width/2 - prefSize.width/2, this.screenSize.height-2*prefSize.height, prefSize.width, prefSize.height);
+        bluePanel.setBounds(this.screenSize.width / 2 - prefSize.width / 2,
+                this.screenSize.height - 2 * prefSize.height, prefSize.width, prefSize.height);
 
         JPanel searchPanel = new JPanel();
         searchPanel.setBackground(panelColor);
         searchPanel.add(this.searchField, BorderLayout.CENTER);
         searchPanel.add(this.searchButton, BorderLayout.EAST);
         Dimension searchprefSize = searchPanel.getPreferredSize();
-        searchPanel.setBounds(this.screenSize.width/2 - searchprefSize.width/2,0,searchprefSize.width, searchprefSize.height);
+        searchPanel.setBounds(this.screenSize.width / 2 - searchprefSize.width / 2, 0, searchprefSize.width,
+                searchprefSize.height);
 
         JPanel songListPanel = new JPanel(new GridLayout(0, 1));
         songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -184,13 +188,14 @@ public class AppFrame extends JFrame implements ActionListener {
             // spacerPanel.setBackground(panelColor);
             // songListPanel.add(spacerPanel);
         }
-        
+
         JScrollPane scrollPane = new JScrollPane(songListPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         prefSize = scrollPane.getPreferredSize();
-        scrollPane.setBounds(this.screenSize.width/2 - prefSize.width/2,searchprefSize.height,prefSize.width, 
-            this.screenSize.height-searchprefSize.height*6);
-        //scrollPane.setBounds(this.screenSize.width/2 - prefSize.width/2,searchprefSize.height,prefSize.width, prefSize.height);
+        scrollPane.setBounds(this.screenSize.width / 2 - prefSize.width / 2, searchprefSize.height, prefSize.width,
+                this.screenSize.height - searchprefSize.height * 6);
+        // scrollPane.setBounds(this.screenSize.width/2 -
+        // prefSize.width/2,searchprefSize.height,prefSize.width, prefSize.height);
 
         // PROGRESS BAR ACTIONS
         this.progressBar = new JProgressBar(0, 100);
@@ -211,7 +216,8 @@ public class AppFrame extends JFrame implements ActionListener {
         progressBarPanel.setBackground(panelColor);
         progressBarPanel.add(progressBar);
         prefSize = progressBarPanel.getPreferredSize();
-        progressBarPanel.setBounds(this.screenSize.width/2 - prefSize.width/2, this.screenSize.height - searchprefSize.height*5, prefSize.width, prefSize.height);
+        progressBarPanel.setBounds(this.screenSize.width / 2 - prefSize.width / 2,
+                this.screenSize.height - searchprefSize.height * 5, prefSize.width, prefSize.height);
 
         // FRAME ACTIONS
         this.setTitle(user.name);
@@ -223,7 +229,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.add(redPanel);
         this.add(bluePanel);
         this.add(searchPanel);
-        //this.add(songListPanel, BorderLayout.CENTER);
+        // this.add(songListPanel, BorderLayout.CENTER);
         this.add(scrollPane);
         this.add(progressBarPanel);
         this.getContentPane().setBackground(backgroundColor);
@@ -234,9 +240,7 @@ public class AppFrame extends JFrame implements ActionListener {
             System.out.println("skip");
             long clipLength = this.clip.getMicrosecondLength();
             this.clip.setMicrosecondPosition(clipLength);
-        }
-        else if(e.getSource()==pauseButton)
-        {
+        } else if (e.getSource() == pauseButton) {
             if (pauseButton.getIcon().equals(pauseIcon)) {
                 pauseButton.setIcon(playIcon);
                 System.out.println("pause");
@@ -246,48 +250,49 @@ public class AppFrame extends JFrame implements ActionListener {
                 System.out.println("play");
                 this.clip.start();
             }
-            
-        }
-        else if(e.getSource()==returnButton)
-        {
+
+        } else if (e.getSource() == returnButton) {
             System.out.println("return");
             this.clip.setMicrosecondPosition(0);
-        }
-        else if(e.getSource()==searchButton)
-        {
+        } else if (e.getSource() == searchButton) {
             String searchTerm = this.searchField.getText();
             System.out.println("Searching for: " + searchTerm);
         }
     }
-    
 
     private ArrayList<Song> createSampleSongs() {
         ArrayList<Song> songs = new ArrayList<>();
         songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
         songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(
+                new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
         songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
         songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(
+                new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
         songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
         songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(
+                new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
         songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
         songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(
+                new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
         songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
         songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(
+                new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
         songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
         songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(
+                new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
         return songs;
     }
 
     private JPanel createSongPanel(Song song) {
         // Create a panel for a single song
         JPanel songPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        songPanel.setLayout(new BoxLayout(songPanel, BoxLayout.X_AXIS)); 
+        songPanel.setLayout(new BoxLayout(songPanel, BoxLayout.X_AXIS));
         songPanel.setPreferredSize(new Dimension(songWidth, 50));
         // songPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         Color borderColor = panelColor; // Specify the border color
@@ -327,16 +332,17 @@ public class AppFrame extends JFrame implements ActionListener {
                 if (recordingPath != null && !recordingPath.isEmpty()) {
                     try {
                         // Use any audio player library or API to play the recording
-                        // For example, you can use the Java Sound API or a third-party library like JLayer
+                        // For example, you can use the Java Sound API or a third-party library like
+                        // JLayer
                         // Here's a simple example using the Java Sound API:
                         File recordingFile = new File(recordingPath);
                         AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
-                        AppFrame.this.clip  = AudioSystem.getClip();
-                        AppFrame.this.clip .open(audioStream);
-                        AppFrame.this.clip .start();
+                        AppFrame.this.clip = AudioSystem.getClip();
+                        AppFrame.this.clip.open(audioStream);
+                        AppFrame.this.clip.start();
 
                         Timer timer = new Timer(100, timerAction);
-                        timer.start(); 
+                        timer.start();
                     } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                         ex.printStackTrace();
                     }
@@ -346,6 +352,5 @@ public class AppFrame extends JFrame implements ActionListener {
 
         return songPanel;
     }
-    
-}
 
+}
