@@ -30,8 +30,8 @@ public class UserReader {
             } else
                 System.out.println("Error");
             Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM app_user WHERE (nick = " + this.username
-                    + ") AND (password = " + this.pass + ")");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM app_user WHERE (nick = " + "'" + this.username
+                    + "') AND (password = " + this.pass + ")");
             while (resultSet.next()) {
 
                 id = resultSet.getInt("user_id");

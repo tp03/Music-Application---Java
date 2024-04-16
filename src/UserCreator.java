@@ -46,16 +46,16 @@ public class UserCreator {
             
             Statement stmt = connection.createStatement();
 
-            PreparedStatement prepstat = connection.prepareStatement(insert_query);
-
-            int rowsInserted = prepstat.executeUpdate();
-
             ResultSet resultSet = stmt.executeQuery(in_query2);
 
             while (resultSet.next()) {
 
                 id = resultSet.getInt("COUNT(*)") + 1;
             }
+            
+            PreparedStatement prepstat = connection.prepareStatement(insert_query);
+
+            int rowsInserted = prepstat.executeUpdate();
             
             if (rowsInserted > 0) {
                 System.out.println("G");

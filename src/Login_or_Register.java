@@ -52,6 +52,7 @@ public class Login_or_Register {
             UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
             this.logged_user = user_reader.searchDB();
             loginFrame.dispose();
+            appFrame.setVisible(true);
         }
     }
 
