@@ -6,13 +6,17 @@ import java.util.ArrayList;
 public class Playlist {
     private ArrayList<Song> songs;
 
-    public Playlist() {
+
+    // stworzenie nowej listy z piosenkami
+    public Playlist() {     
         this.songs = new ArrayList<>();
     }
 
     public void addSong(Song song) {
         songs.add(song);
     }
+
+    //gettery do autorow, tytulow, miniaturek, nagran
 
     public void savePlaylistToFile(String playlist_name) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(playlist_name))) {
@@ -27,12 +31,16 @@ public class Playlist {
         }
     }
 
+    // należy stworzyć gettery
+
     private String formatSong(Song song) {
         return song.getName() + " - " + song.getAuthor();
     }
 
     public static void main(String[] args) {
-        // Przykładowe użycie
+        
+        // Przykładowe użycie zapisywania do pliku
+
         Playlist myPlaylist = new Playlist();
         Song song1 = new Song("Pila tango", "Bajm", "image1.jpg", "recording1.mp3");
         Song song2 = new Song("Song", "Author", "image2.jpg", "recording2.mp3");
