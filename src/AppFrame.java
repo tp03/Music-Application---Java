@@ -262,48 +262,13 @@ public class AppFrame extends JFrame implements ActionListener {
 
     private ArrayList<Song> createSampleSongs() {
         ArrayList<Song> songs = new ArrayList<>();
-        // songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk",
-        // "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        // songs.add(
-        // new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk",
-        // "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        // songs.add(
-        // new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk",
-        // "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        // songs.add(
-        // new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk",
-        // "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        // songs.add(
-        // new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk",
-        // "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        // songs.add(
-        // new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png",
-        // "recordings/gwiazda.mp3"));
-        // songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk",
-        // "assets/zenek2.jpg", "recordings/chwile.mp3"));
-        // songs.add(
-        // new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg",
-        // "recordings/gwiazda.mp3"));
+        songs.add(new Song(1));
+        songs.add(new Song(2));
+        songs.add(new Song(3));
+        songs.add(new Song(4));
+        songs.add(new Song(5));
+        songs.add(new Song(6));
+        songs.add(new Song(7));
         return songs;
     }
 

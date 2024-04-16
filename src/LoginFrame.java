@@ -1,5 +1,5 @@
 import javax.swing.*;
-
+import java.util.List;
 import java.awt.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.*;
@@ -218,5 +218,41 @@ public class LoginFrame extends JFrame {// inheriting JFrame
         data.put("password", password);
         return data;
 
+    }
+
+    public void highlight_unfilled_login(List<String> check_result) {
+        reset_login_color();
+        for (String element : check_result) {
+            if (login_input_map.containsKey(element)) {
+                login_input_map.get(element).setBackground(new Color(200, 0, 0));
+            } else {
+                password_field_login.setBackground(new Color(200, 0, 0));
+            }
+        }
+    }
+
+    public void highlight_unfilled_register(List<String> check_result) {
+        reset_register_color();
+        for (String element : check_result) {
+            if (register_input_map.containsKey(element)) {
+                register_input_map.get(element).setBackground(new Color(200, 0, 0));
+            } else {
+                password_field_register.setBackground(new Color(200, 0, 0));
+            }
+        }
+    }
+
+    public void reset_register_color() {
+        for (JTextField value : register_input_map.values()) {
+            value.setBackground(new Color(255, 255, 255));
+        }
+        password_field_register.setBackground(new Color(255, 255, 255));
+    }
+
+    public void reset_login_color() {
+        for (JTextField value : login_input_map.values()) {
+            value.setBackground(new Color(255, 255, 255));
+        }
+        password_field_login.setBackground(new Color(255, 255, 255));
     }
 }

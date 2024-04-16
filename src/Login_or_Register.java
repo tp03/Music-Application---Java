@@ -5,11 +5,14 @@ import java.lang.reflect.Array;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Login_or_Register {
 
     private LoginFrame loginFrame;
     private AppFrame appFrame;
+    private Spotify_user logged_user;
 
     Login_or_Register(LoginFrame loginFrame, AppFrame AppFrame, JButton loginbutton, JButton registerbutton) {
         this.appFrame = AppFrame;
@@ -39,15 +42,39 @@ public class Login_or_Register {
 
     void register() {
         Map<String, String> data = loginFrame.collect_register_data();
-        System.out.println(data.get("email"));
-        loginFrame.dispose();
-        appFrame.setVisible(true);
+        List<String> check_result = check_data(data);
+        if (check_result.size() != 0) {
+            loginFrame.highlight_unfilled_register(check_result);
+        } else {
+            UserCreator user_creator = new UserCreator();
+            user_creator.created_user(data.get("name"), data.get("surname"), data.get("nickname"), data.get("email"),
+                    data.get("password"));
+            UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
+            this.logged_user = user_reader.searchDB();
+            loginFrame.dispose();
+        }
     }
 
     void login() {
         Map<String, String> data = loginFrame.collect_login_data();
-        System.out.println(data.get("password"));
-        loginFrame.dispose();
-        appFrame.setVisible(true);
+        List<String> check_result = check_data(data);
+        if (check_result.size() != 0) {
+            loginFrame.highlight_unfilled_login(check_result);
+        } else {
+            UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
+            this.logged_user = user_reader.searchDB();
+            loginFrame.dispose();
+            appFrame.setVisible(true);
+        }
+    }
+
+    List<String> check_data(Map<String, String> map) {
+        List<String> unfilled = new ArrayList<>();
+        for (String key : map.keySet()) {
+            if (map.get(key).isEmpty()) {
+                unfilled.add(key);
+            }
+        }
+        return unfilled;
     }
 }
