@@ -266,6 +266,9 @@ public class AppFrame extends JFrame implements ActionListener {
         songs.add(new Song(2));
         songs.add(new Song(3));
         songs.add(new Song(4));
+        songs.add(new Song(5));
+        songs.add(new Song(6));
+        songs.add(new Song(7));
         return songs;
     }
 
