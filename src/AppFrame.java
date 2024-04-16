@@ -8,6 +8,19 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.JComponent;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
+import javax.sound.sampled.LineUnavailableException;
+import javax.swing.JComponent;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -210,27 +223,28 @@ public class AppFrame extends JFrame implements ActionListener {
             System.out.println("Searching for: " + searchTerm);
         }
     }
+    
 
     private ArrayList<Song> createSampleSongs() {
         ArrayList<Song> songs = new ArrayList<>();
-        songs.add(new Song("Song 1", "Zenek", "assets/zenek1.png"));
-        songs.add(new Song("Song 2", "Zenon", "assets/zenek2.jpg"));
-        songs.add(new Song("Song 3", "Martuniuk", "assets/zenek3.jpeg"));
-        songs.add(new Song("Song 1", "Zenek", "assets/zenek1.png"));
-        songs.add(new Song("Song 2", "Zenon", "assets/zenek2.jpg"));
-        songs.add(new Song("Song 3", "Martuniuk", "assets/zenek3.jpeg"));
-        songs.add(new Song("Song 1", "Zenek", "assets/zenek1.png"));
-        songs.add(new Song("Song 2", "Zenon", "assets/zenek2.jpg"));
-        songs.add(new Song("Song 3", "Martuniuk", "assets/zenek3.jpeg"));
-        songs.add(new Song("Song 1", "Zenek", "assets/zenek1.png"));
-        songs.add(new Song("Song 2", "Zenon", "assets/zenek2.jpg"));
-        songs.add(new Song("Song 3", "Martuniuk", "assets/zenek3.jpeg"));
-        songs.add(new Song("Song 1", "Zenek", "assets/zenek1.png"));
-        songs.add(new Song("Song 2", "Zenon", "assets/zenek2.jpg"));
-        songs.add(new Song("Song 3", "Martuniuk", "assets/zenek3.jpeg"));
-        songs.add(new Song("Song 1", "Zenek", "assets/zenek1.png"));
-        songs.add(new Song("Song 2", "Zenon", "assets/zenek2.jpg"));
-        songs.add(new Song("Song 3", "Martuniuk", "assets/zenek3.jpeg"));
+        songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
+        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
+        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
+        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
+        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
+        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Moja Gwiazda", "Zenon Martyniuk", "assets/zenek1.png", "recordings/gwiazda.mp3"));
+        songs.add(new Song("Życie To Są Chwile", "Zenon Martyniuk", "assets/zenek2.jpg", "recordings/chwile.mp3"));
+        songs.add(new Song("Przez Twe Oczy Zielone", "Zenon Martuniuk", "assets/zenek3.jpeg", "recordings/gwiazda.mp3"));
         return songs;
     }
 
@@ -268,6 +282,28 @@ public class AppFrame extends JFrame implements ActionListener {
         JLabel imageLabel = new JLabel(resizedIcon);
         songPanel.add(Box.createHorizontalGlue());
         songPanel.add(imageLabel);
+
+        ((JComponent) songPanel).addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Play the recording
+                String recordingPath = song.getRecordingPath();
+                if (recordingPath != null && !recordingPath.isEmpty()) {
+                    try {
+                        // Use any audio player library or API to play the recording
+                        // For example, you can use the Java Sound API or a third-party library like JLayer
+                        // Here's a simple example using the Java Sound API:
+                        File recordingFile = new File(recordingPath);
+                        AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
+                        Clip clip = AudioSystem.getClip();
+                        clip.open(audioStream);
+                        clip.start();
+                    } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
 
         return songPanel;
     }
