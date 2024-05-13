@@ -16,7 +16,7 @@ public class UserReader {
         this.pass = passw;
     }
 
-    Spotify_user searchDB() {
+    Spotify_user searchDB() throws Exception{
         Connection connection = null;
         int id = 0;
         try {
@@ -30,14 +30,15 @@ public class UserReader {
             } else
                 System.out.println("Error");
             Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM app_user WHERE (nick = " + this.username
-                    + ") AND (password = " + this.pass + ")");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM app_user WHERE (nick = '" + this.username
+                    + "') AND (password = '" + this.pass + "')");
             while (resultSet.next()) {
 
                 id = resultSet.getInt("user_id");
             }
-            if (!resultSet.next()) {
-                // co sie dzieje gdy wpiszaemy nieistniejący nick
+            if (id == 0) {
+                
+                throw new Exception("bad");
             }
             stmt.close();
         } catch (SQLException e) {
