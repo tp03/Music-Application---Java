@@ -51,3 +51,7 @@ SELECT *
 FROM (SONG s join SONG_DATA sd on(sd.song_data_id = s.DATA_ID)) join AUTHOR_SONGS aus using(SONG_ID);
 
 SELECT * from PLAYLIST;
+
+SELECT * from SONG_AND_PLAYLIST;
+
+SELECT * FROM song_and_playlist join song using(song_id) WHERE playlist_id = 1;
