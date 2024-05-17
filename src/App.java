@@ -23,7 +23,7 @@ public class App {
         // UserCreator próba = new UserCreator();
         // próba.created_user(2, "Tomek", "Zalewski", "tp03", "tzal@gmail.com");
         SongImport newsong = new SongImport("/recordings", "/assets");
-        newsong.ImportSong("wyszło5");
+        newsong.ImportSong("wyszło5", "ADITECHNIK");
         login.setVisible(true);
         Login_or_Register LoginLogic = new Login_or_Register(login, appFrame,
                 login.loginbutton, login.registerbutton);

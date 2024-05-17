@@ -14,7 +14,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 public class SongImport {
-    String recordingPath, IconPath, songName;
+    String recordingPath, IconPath, songName, songAuthor;
     Connection connection = null;
     int id;
 
@@ -23,8 +23,9 @@ public class SongImport {
         this.IconPath = IconPath;
     }
 
-    public void ImportSong(String songName) {
+    public void ImportSong(String songName, String author) {
         this.songName = songName;
+        this.songAuthor = author;
         String[] record_extensions = { "mp3" };
         FileExporter(this.recordingPath, songName, record_extensions);
         String[] icon_extensions = { "png", "jpg" };
@@ -85,8 +86,36 @@ public class SongImport {
             prepstat = connection.prepareStatement(insert_query);
 
             rowsInserted = prepstat.executeUpdate();
+            int result = 0;
 
-            if (rowsInserted > 1) {
+            try {
+                ResultSet rs4 = stmt
+                        .executeQuery("SELECT author_id FROM author WHERE name ='" + this.songAuthor + "'");
+                while (rs4.next()) {
+                    result = rs4.getInt("author_id");
+                }
+                stmt.close();
+            } catch (Exception e) {
+                in_query2 = "SELECT COUNT(*) FROM song_data";
+                resultSet = stmt.executeQuery(in_query2);
+                int authorId = 0;
+                while (resultSet.next()) {
+                    authorId = resultSet.getInt("COUNT(*)") + 1;
+                }
+                insert_query = "INSERT INTO AUTHOR VALUES ("
+                        + authorId + ",'" + this.songAuthor + "'," + 100 + ")";
+                prepstat = connection.prepareStatement(insert_query);
+                rowsInserted = prepstat.executeUpdate();
+
+                result = authorId;
+                System.out.println("Dodano autora");
+            }
+            insert_query = "INSERT INTO AUTHOR_SONGS VALUES ("
+                    + this.id + "," + result + "," + this.id + ")";
+            prepstat = connection.prepareStatement(insert_query);
+            rowsInserted = prepstat.executeUpdate();
+            System.out.println("Dodano utwór do autora");
+            if (rowsInserted > 0) {
                 System.out.println("G");
             } else {
                 System.out.println("Nie G");
