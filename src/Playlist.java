@@ -2,13 +2,39 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Playlist {
+
+    private int id;
     private ArrayList<Song> songs;
+    private String name;
 
     // stworzenie nowej listy z piosenkami
-    public Playlist() {
-        this.songs = new ArrayList<>();
+    public Playlist(int playlist_id) throws SQLException{
+        this.songs = new ArrayList<Song>();
+        this.id = playlist_id;
+        Connection connection = null;
+        try {
+            DatabaseConnection DC = new DatabaseConnection();
+            connection = DC.MakeConnection();
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM playlist WHERE playlist_id = " + this.id);
+            while (rs.next()) {
+                this.name = rs.getString("name");
+            }
+            ResultSet rs2 = stmt.executeQuery("SELECT name FROM song_and_playlist join song using(song_id) WHERE playlist_id = " + this.id);
+            while (rs2.next()){
+                Song song_from_playlist = new Song(rs2.getInt("song_id"));
+                this.songs.add(song_from_playlist);
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }        
     }
 
     public void addSong(Song song) {

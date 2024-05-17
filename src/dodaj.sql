@@ -43,6 +43,11 @@ SELECT COUNT(*) FROM app_user;
 
 DELETE FROM APP_USER;
 
-SELECT * FROM APP_USER;
+SELECT * FROM AUTHOR;
 
 SELECT * FROM app_user WHERE (nick = 'tp03') AND (password = '12345');
+
+SELECT *
+FROM (SONG s join SONG_DATA sd on(sd.song_data_id = s.DATA_ID)) join AUTHOR_SONGS aus using(SONG_ID);
+
+SELECT * from PLAYLIST;

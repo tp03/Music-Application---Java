@@ -1,5 +1,4 @@
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,11 +25,8 @@ public class UserCreator {
         this.pass = passw;
         Connection connection = null;
         try{
-            Class.forName("oracle.jdbc.driver.OracleDriver"); 
-            String url = "jdbc:oracle:thin:@ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl";
-            String usern = "tzalews1";
-            String password = "tzalews1";
-            connection = DriverManager.getConnection(url, usern, password);
+            DatabaseConnection dc = new DatabaseConnection();
+            connection = dc.MakeConnection();
             if (connection != null)
             {
                 System.out.println("Successful");
@@ -67,10 +63,6 @@ public class UserCreator {
 
         }
         catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }
