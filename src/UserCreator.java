@@ -1,5 +1,4 @@
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,9 +13,8 @@ public class UserCreator {
     private String email;
     private String pass;
     
-    void created_user(int id, String name, String last_name, String user_name, String email, String passw)
+    void created_user(String name, String last_name, String user_name, String email, String passw)
     {
-        this.id = id;
         this.name = name;
         this.last_name = last_name;
         this.username = user_name;
@@ -27,11 +25,8 @@ public class UserCreator {
         this.pass = passw;
         Connection connection = null;
         try{
-            Class.forName("oracle.jdbc.driver.OracleDriver"); 
-            String url = "jdbc:oracle:thin:@ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl";
-            String usern = "tzalews1";
-            String password = "tzalews1";
-            connection = DriverManager.getConnection(url, usern, password);
+            DatabaseConnection dc = new DatabaseConnection();
+            connection = dc.MakeConnection();
             if (connection != null)
             {
                 System.out.println("Successful");
@@ -39,6 +34,17 @@ public class UserCreator {
             else
                 System.out.println("Error");
 
+            String in_query2 = "SELECT COUNT(*) FROM app_user";
+            
+            Statement stmt = connection.createStatement();
+
+            ResultSet resultSet = stmt.executeQuery(in_query2);
+
+            while (resultSet.next()) {
+
+                this.id = resultSet.getInt("COUNT(*)") + 1;
+            }
+            
             String insert_query = "INSERT INTO app_user VALUES ("
             + this.id + ", '" + this.name + "', '" + this.last_name
             + "', '" + this.username + "', '" + this.email + "', '" + this.pass + "')";
@@ -53,16 +59,10 @@ public class UserCreator {
                 System.out.println("Nie G");
             }
 
-            connection.commit();
-
             connection.close();
 
         }
         catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e)
         {
             e.printStackTrace();
         }

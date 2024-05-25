@@ -12,29 +12,21 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.*;
-
-import javax.swing.JComponent;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
-import javax.swing.JComponent;
+
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+
 import javax.swing.border.LineBorder;
 
 public class AppFrame extends JFrame implements ActionListener {
@@ -60,6 +52,10 @@ public class AppFrame extends JFrame implements ActionListener {
     private Clip clip;
     private JProgressBar progressBar;
     private ActionListener timerAction;
+    private Spotify_user activeUser = null;
+    private JPanel songListPanel;
+    private JScrollPane scrollPane = new JScrollPane(songListPanel);
+    private JPanel searchPanel;
 
     AppFrame() {
         this.imageIcon = new ImageIcon("assets/logo1.png");
@@ -150,6 +146,10 @@ public class AppFrame extends JFrame implements ActionListener {
         searchField.setForeground(Color.WHITE);
         searchField.setBackground(Color.BLACK);
 
+        this.songListPanel = new JPanel(new GridLayout(0, 1));
+        songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        songListPanel.setBackground(panelColor);
+
         // PANEL ACTIONS
         JPanel redPanel = new JPanel();
         redPanel.setBackground(panelColor);
@@ -166,14 +166,15 @@ public class AppFrame extends JFrame implements ActionListener {
         bluePanel.setBounds(this.screenSize.width / 2 - prefSize.width / 2,
                 this.screenSize.height - 2 * prefSize.height, prefSize.width, prefSize.height);
 
-        JPanel searchPanel = new JPanel();
-        searchPanel.setBackground(panelColor);
-        searchPanel.add(this.searchField, BorderLayout.CENTER);
-        searchPanel.add(this.searchButton, BorderLayout.EAST);
-        Dimension searchprefSize = searchPanel.getPreferredSize();
-        searchPanel.setBounds(this.screenSize.width / 2 - searchprefSize.width / 2, 0, searchprefSize.width,
+        this.searchPanel = new JPanel();
+        this.searchPanel.setBackground(panelColor);
+        this.searchPanel.add(this.searchField, BorderLayout.CENTER);
+        this.searchPanel.add(this.searchButton, BorderLayout.EAST);
+        Dimension searchprefSize = this.searchPanel.getPreferredSize();
+        this.searchPanel.setBounds(this.screenSize.width / 2 - searchprefSize.width / 2, 0, searchprefSize.width,
                 searchprefSize.height);
 
+<<<<<<< HEAD
         JPanel songListPanel = new JPanel(new GridLayout(0, 1));
         songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         songListPanel.setBackground(panelColor);
@@ -198,6 +199,8 @@ public class AppFrame extends JFrame implements ActionListener {
         prefSize = scrollPane.getPreferredSize();
         scrollPane.setBounds(this.screenSize.width / 2 - prefSize.width / 2, searchprefSize.height, prefSize.width,
                 this.screenSize.height - searchprefSize.height * 6);
+=======
+>>>>>>> origin/Marcin
         // scrollPane.setBounds(this.screenSize.width/2 -
         // prefSize.width/2,searchprefSize.height,prefSize.width, prefSize.height);
 
@@ -224,7 +227,9 @@ public class AppFrame extends JFrame implements ActionListener {
                 this.screenSize.height - searchprefSize.height * 5, prefSize.width, prefSize.height);
 
         // FRAME ACTIONS
-        this.setTitle("test123");
+        if (this.activeUser != null) {
+            this.setTitle(this.activeUser.getName());
+        }
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setResizable(false);
@@ -237,6 +242,37 @@ public class AppFrame extends JFrame implements ActionListener {
         this.add(scrollPane);
         this.add(progressBarPanel);
         this.getContentPane().setBackground(backgroundColor);
+        drawCustom();
+    }
+
+    public void drawCustom() {
+        if (this.activeUser != null) {
+            this.setTitle(this.activeUser.getName());
+        }
+        drawSongs();
+    }
+
+    public void drawSongs() {
+        this.remove(this.scrollPane);
+        this.songListPanel = new JPanel(new GridLayout(0, 1));
+        songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        songListPanel.setBackground(panelColor);
+
+        ArrayList<Song> songs = createSongsArray();
+
+        for (Song song : songs) {
+            JPanel songPanel = createSongPanel(song);
+            System.out.println(song.getName());
+            songListPanel.add(songPanel);
+        }
+        Dimension searchprefSize = this.searchPanel.getPreferredSize();
+        JScrollPane scrollPane = new JScrollPane(songListPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        Dimension prefSize = scrollPane.getPreferredSize();
+        scrollPane.setBounds(this.screenSize.width / 2 - prefSize.width / 2, searchprefSize.height, prefSize.width,
+                this.screenSize.height - searchprefSize.height * 6);
+        this.add(scrollPane);
+        this.scrollPane = scrollPane;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -264,12 +300,34 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
-    private ArrayList<Song> createSampleSongs() {
+    private ArrayList<Song> createSongsArray() {
         ArrayList<Song> songs = new ArrayList<>();
+<<<<<<< HEAD
         songs.add(new Song(1));
         songs.add(new Song(2));
         songs.add(new Song(3));
         songs.add(new Song(4));
+=======
+        try {
+            DatabaseConnection newCon = new DatabaseConnection();
+            Connection connection = newCon.MakeConnection();
+            String in_query2 = "SELECT COUNT(*) FROM song_data";
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(in_query2);
+            int idMax = 1;
+            while (resultSet.next()) {
+
+                idMax = resultSet.getInt("COUNT(*)");
+            }
+            System.out.println(idMax);
+
+            for (int id = 1; id <= idMax; id++) {
+                songs.add(new Song(id));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+>>>>>>> origin/Marcin
         return songs;
     }
 
@@ -335,6 +393,10 @@ public class AppFrame extends JFrame implements ActionListener {
         });
 
         return songPanel;
+    }
+
+    void setActiveUser(Spotify_user user) {
+        this.activeUser = user;
     }
 
 }
