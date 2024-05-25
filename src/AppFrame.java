@@ -174,33 +174,6 @@ public class AppFrame extends JFrame implements ActionListener {
         this.searchPanel.setBounds(this.screenSize.width / 2 - searchprefSize.width / 2, 0, searchprefSize.width,
                 searchprefSize.height);
 
-<<<<<<< HEAD
-        JPanel songListPanel = new JPanel(new GridLayout(0, 1));
-        songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        songListPanel.setBackground(panelColor);
-
-        JPanel playlistListPanel = new JPanel(new GridLayout(0, 1));
-        playlistListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        playlistListPanel.setBackground(panelColor);
-
-        ArrayList<Song> songs = createSampleSongs();
-
-        for (Song song : songs) {
-            JPanel songPanel = createSongPanel(song);
-            songListPanel.add(songPanel);
-            // JPanel spacerPanel = new JPanel();
-            // spacerPanel.setPreferredSize(new Dimension(songWidth, 1));
-            // spacerPanel.setBackground(panelColor);
-            // songListPanel.add(spacerPanel);
-        }
-
-        JScrollPane scrollPane = new JScrollPane(songListPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        prefSize = scrollPane.getPreferredSize();
-        scrollPane.setBounds(this.screenSize.width / 2 - prefSize.width / 2, searchprefSize.height, prefSize.width,
-                this.screenSize.height - searchprefSize.height * 6);
-=======
->>>>>>> origin/Marcin
         // scrollPane.setBounds(this.screenSize.width/2 -
         // prefSize.width/2,searchprefSize.height,prefSize.width, prefSize.height);
 
@@ -302,12 +275,6 @@ public class AppFrame extends JFrame implements ActionListener {
 
     private ArrayList<Song> createSongsArray() {
         ArrayList<Song> songs = new ArrayList<>();
-<<<<<<< HEAD
-        songs.add(new Song(1));
-        songs.add(new Song(2));
-        songs.add(new Song(3));
-        songs.add(new Song(4));
-=======
         try {
             DatabaseConnection newCon = new DatabaseConnection();
             Connection connection = newCon.MakeConnection();
@@ -327,7 +294,6 @@ public class AppFrame extends JFrame implements ActionListener {
         } catch (SQLException e) {
             e.printStackTrace();
         }
->>>>>>> origin/Marcin
         return songs;
     }
 
