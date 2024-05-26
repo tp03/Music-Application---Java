@@ -28,6 +28,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private ImageIcon pauseIcon;
     private ImageIcon playIcon;
     private ImageIcon searchIcon;
+    private ImageIcon backgroundIcon;
     private JLabel titleLabel;
     private Dimension screenSize;
     private int buttonWidth;
@@ -55,6 +56,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
     private JPanel userPanel;
     private JLabel usernameLabel;
+    private JLabel backgroundLabel;
 
     AppFrame() {
         this.imageIcon = new ImageIcon("assets/logo1.png");
@@ -87,6 +89,8 @@ public class AppFrame extends JFrame implements ActionListener {
         newImage = image.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         this.searchIcon = new ImageIcon(newImage);
 
+        
+
         this.buttonWidth = 100;
         this.songWidth = 600;
         this.titleLabel = new JLabel(imageIcon);
@@ -104,6 +108,13 @@ public class AppFrame extends JFrame implements ActionListener {
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         this.screenSize = toolkit.getScreenSize();
+
+        this.backgroundIcon = new ImageIcon("assets/images.jpeg");
+        image = this.backgroundIcon.getImage();
+        newImage = image.getScaledInstance(this.screenSize.width, this.screenSize.height, Image.SCALE_SMOOTH);
+        this.backgroundIcon = new ImageIcon(newImage);
+        this.backgroundLabel = new JLabel(backgroundIcon);
+        backgroundLabel.setBounds(0, 0, this.screenSize.width, this.screenSize.height);
 
         // BUTTON ACTIONS
         skipButton.setPreferredSize(new Dimension(buttonWidth, buttonWidth));
@@ -264,6 +275,8 @@ public class AppFrame extends JFrame implements ActionListener {
         if (this.activeUser != null) {
             this.setTitle(this.activeUser.getName());
         }
+        this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
+        this.setContentPane(backgroundLabel);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setResizable(false);
@@ -277,7 +290,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.add(progressBarPanel);
         this.add(playlistPanel);
         this.add(userPanel);
-        this.getContentPane().setBackground(backgroundColor);
+        // this.getContentPane().setBackground(backgroundColor);
         drawCustom();
     }
 
