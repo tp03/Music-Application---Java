@@ -66,11 +66,11 @@ public class Playlist {
 
         // Przykładowe użycie zapisywania do pliku
 
-        Playlist myPlaylist = new Playlist();
+        // Playlist myPlaylist = new Playlist();
         // Song song1 = new Song("Pila tango", "Bajm", "image1.jpg", "recording1.mp3");
         // Song song2 = new Song("Song", "Author", "image2.jpg", "recording2.mp3");
         // myPlaylist.addSong(song1);
         // myPlaylist.addSong(song2);
-        myPlaylist.savePlaylistToFile("playlist.txt");
+        // myPlaylist.savePlaylistToFile("playlist.txt");
     }
 }

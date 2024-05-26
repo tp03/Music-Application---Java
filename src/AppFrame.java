@@ -1,11 +1,5 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -17,16 +11,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import javax.swing.*;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
-
-import java.util.ArrayList;
-
 import javax.swing.border.LineBorder;
 
 public class AppFrame extends JFrame implements ActionListener {
@@ -56,6 +46,15 @@ public class AppFrame extends JFrame implements ActionListener {
     private JPanel songListPanel;
     private JScrollPane scrollPane = new JScrollPane(songListPanel);
     private JPanel searchPanel;
+
+    private JPanel playlistPanel;
+    private DefaultListModel<String> playlistModel;
+    private JList<String> playlistList;
+    private JButton addPlaylistButton;
+    private JButton removePlaylistButton;
+
+    private JPanel userPanel;
+    private JLabel usernameLabel;
 
     AppFrame() {
         this.imageIcon = new ImageIcon("assets/logo1.png");
@@ -93,7 +92,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.titleLabel = new JLabel(imageIcon);
         this.backgroundColor = new Color(230, 138, 0);
         this.textColor = new Color(0, 0, 0);
-        this.panelColor = Color.blue; // set to blue for visibility
+        this.panelColor = backgroundColor; // set to blue for visibility
         this.panelColor2 = panelColor;
         this.skipButton = new JButton(skipIcon);
         this.pauseButton = new JButton(pauseIcon);
@@ -199,6 +198,68 @@ public class AppFrame extends JFrame implements ActionListener {
         progressBarPanel.setBounds(this.screenSize.width / 2 - prefSize.width / 2,
                 this.screenSize.height - searchprefSize.height * 5, prefSize.width, prefSize.height);
 
+        // PLAYLIST PANEL ACTIONS
+        this.playlistPanel = new JPanel(new BorderLayout());
+        this.playlistPanel.setBackground(panelColor);
+        this.playlistPanel.setBorder(BorderFactory.createTitledBorder("Playlists"));
+
+        this.playlistModel = new DefaultListModel<>();
+        this.playlistList = new JList<>(playlistModel);
+        JScrollPane playlistScrollPane = new JScrollPane(playlistList);
+
+        this.addPlaylistButton = new JButton("Add Playlist");
+        this.addPlaylistButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String playlistName = JOptionPane.showInputDialog("Enter playlist name:");
+                if (playlistName != null && !playlistName.trim().isEmpty()) {
+                    playlistModel.addElement(playlistName);
+                }
+            }
+        });
+
+        this.removePlaylistButton = new JButton("Remove Playlist");
+        this.removePlaylistButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = playlistList.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    playlistModel.remove(selectedIndex);
+                }
+            }
+        });
+
+        JPanel playlistButtonPanel = new JPanel();
+        playlistButtonPanel.add(addPlaylistButton);
+        playlistButtonPanel.add(removePlaylistButton);
+
+        this.playlistPanel.add(playlistScrollPane, BorderLayout.CENTER);
+        this.playlistPanel.add(playlistButtonPanel, BorderLayout.SOUTH);
+        prefSize = this.playlistPanel.getPreferredSize();
+        this.playlistPanel.setBounds(this.screenSize.width - prefSize.width - 40, this.searchPanel.getPreferredSize().height, prefSize.width, this.screenSize.height-this.searchPanel.getPreferredSize().height*4);
+
+        // USER PANEL ACTIONS
+        this.userPanel = new JPanel();
+        this.userPanel.setBackground(panelColor);
+        this.userPanel.setBorder(BorderFactory.createTitledBorder("User"));
+        this.usernameLabel = new JLabel("Username: " + (activeUser != null ? activeUser.getName() : "Guest"));
+        this.usernameLabel.setForeground(Color.WHITE);
+        this.usernameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        this.usernameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String newUsername = JOptionPane.showInputDialog("Enter new username:");
+                if (newUsername != null && !newUsername.trim().isEmpty()) {
+                    if (activeUser != null) {
+                        usernameLabel.setText("Username: " + activeUser.getName());
+                    }
+                    usernameLabel.setText("Username: " + newUsername);
+                }
+            }
+        });
+
+        this.userPanel.add(usernameLabel);
+        prefSize = this.userPanel.getPreferredSize();
+        this.userPanel.setBounds(this.titleLabel.getPreferredSize().width+10, 20, prefSize.width, prefSize.height);
+
         // FRAME ACTIONS
         if (this.activeUser != null) {
             this.setTitle(this.activeUser.getName());
@@ -214,6 +275,8 @@ public class AppFrame extends JFrame implements ActionListener {
         // this.add(songListPanel, BorderLayout.CENTER);
         this.add(scrollPane);
         this.add(progressBarPanel);
+        this.add(playlistPanel);
+        this.add(userPanel);
         this.getContentPane().setBackground(backgroundColor);
         drawCustom();
     }
@@ -221,6 +284,7 @@ public class AppFrame extends JFrame implements ActionListener {
     public void drawCustom() {
         if (this.activeUser != null) {
             this.setTitle(this.activeUser.getName());
+            this.usernameLabel.setText("Username: " + this.activeUser.getName());
         }
         drawSongs();
     }
@@ -298,7 +362,7 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createSongPanel(Song song) {
-        // Create a panel for a single song
+        // Panel
         JPanel songPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         songPanel.setLayout(new BoxLayout(songPanel, BoxLayout.X_AXIS));
         songPanel.setPreferredSize(new Dimension(songWidth, 50));
@@ -309,7 +373,7 @@ public class AppFrame extends JFrame implements ActionListener {
         songPanel.setBorder(border);
         songPanel.setBackground(Color.BLACK);
 
-        // Create a label for the song name
+        // Song Label
         JLabel nameLabel = new JLabel(song.getName());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 22)); // Set font size
         nameLabel.setForeground(Color.WHITE);
@@ -318,13 +382,13 @@ public class AppFrame extends JFrame implements ActionListener {
         JPanel contentPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         contentPanel.setBackground(Color.BLACK);
 
-        // Create a label for the author
+        // Author Label
         JLabel authorLabel = new JLabel(" - " + song.getAuthor());
         authorLabel.setFont(new Font("Arial", Font.PLAIN, 22)); // Set font size
         authorLabel.setForeground(Color.WHITE);
         songPanel.add(authorLabel);
 
-        // Create an image icon for the song image
+        // Image
         ImageIcon imageIcon = new ImageIcon(song.getImagePath());
         Image image = imageIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize image
         ImageIcon resizedIcon = new ImageIcon(image);
@@ -335,14 +399,9 @@ public class AppFrame extends JFrame implements ActionListener {
         ((JComponent) songPanel).addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Play the recording
                 String recordingPath = song.getRecordingPath();
                 if (recordingPath != null && !recordingPath.isEmpty()) {
                     try {
-                        // Use any audio player library or API to play the recording
-                        // For example, you can use the Java Sound API or a third-party library like
-                        // JLayer
-                        // Here's a simple example using the Java Sound API:
                         File recordingFile = new File(recordingPath);
                         AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
                         AppFrame.this.clip = AudioSystem.getClip();

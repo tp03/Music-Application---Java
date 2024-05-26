@@ -22,10 +22,12 @@ public class App {
 
         // UserCreator próba = new UserCreator();
         // próba.created_user(2, "Tomek", "Zalewski", "tp03", "tzal@gmail.com");
-        Spotify_user su = new Spotify_user(1);
-        su.createPlaylist("test123");
+        // SongImport newsong = new SongImport("/recordings", "/assets");
+        // newsong.ImportSong("nowapiosenka");
+        login.setVisible(true);
         Login_or_Register LoginLogic = new Login_or_Register(login, appFrame,
                 login.loginbutton, login.registerbutton);
+
     }
 
 }
