@@ -132,6 +132,10 @@ public class Spotify_user {
         playlist.removeSong(song);
     }
 
+    void shufflePlaylist(Playlist playlist) {
+        playlist.Shuffle();
+    }
+
     void deletePlaylist(Playlist playlist) {
         this.user_playlists.remove(playlist);
         int playlist_id = playlist.getId();
