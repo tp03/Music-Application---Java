@@ -28,6 +28,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private ImageIcon pauseIcon;
     private ImageIcon playIcon;
     private ImageIcon searchIcon;
+    private ImageIcon addIcon;
     private ImageIcon backgroundIcon;
     private JLabel titleLabel;
     private Dimension screenSize;
@@ -36,6 +37,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JButton pauseButton;
     private JButton returnButton;
     private JButton searchButton;
+    private JButton addButton;
     private JTextField searchField;
     private Color panelColor;
     private Color panelColor2;
@@ -89,6 +91,11 @@ public class AppFrame extends JFrame implements ActionListener {
         newImage = image.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         this.searchIcon = new ImageIcon(newImage);
 
+        this.addIcon = new ImageIcon("assets/add.png");
+        image = this.addIcon.getImage();
+        newImage = image.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        this.addIcon = new ImageIcon(newImage);
+
         
 
         this.buttonWidth = 100;
@@ -101,8 +108,8 @@ public class AppFrame extends JFrame implements ActionListener {
         this.skipButton = new JButton(skipIcon);
         this.pauseButton = new JButton(pauseIcon);
         this.returnButton = new JButton(returnIcon);
-
         this.searchButton = new JButton(searchIcon);
+        this.addButton = new JButton(addIcon);
 
         // Border border = BorderFactory.createLineBorder(Color.green,3);
 
@@ -133,6 +140,10 @@ public class AppFrame extends JFrame implements ActionListener {
         searchButton.setBackground(Color.BLACK);
         searchButton.addActionListener(this);
 
+        addButton.setPreferredSize(new Dimension(80, 50));
+        addButton.addActionListener(this);
+        addButton.setBackground(Color.BLACK);
+
         // TITLE ACTIONS
         // titleLabel.setBorder(border);
         // UserReader reader = new UserReader("test123"); // testowy logowanie
@@ -161,14 +172,30 @@ public class AppFrame extends JFrame implements ActionListener {
         songListPanel.setBackground(panelColor);
 
         // PANEL ACTIONS
-        JPanel redPanel = new JPanel();
-        redPanel.setBackground(panelColor);
+        JPanel redPanel = new JPanel()
+        {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                
+            }
+        };
+        redPanel.setOpaque(false);
+        //redPanel.setBackground(panelColor);
         redPanel.add(titleLabel);
         Dimension prefSize = redPanel.getPreferredSize();
         redPanel.setBounds(0, 0, prefSize.width, prefSize.height);
 
-        JPanel bluePanel = new JPanel();
-        bluePanel.setBackground(panelColor);
+        JPanel bluePanel = new JPanel()
+        {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                
+            }
+        };
+        bluePanel.setOpaque(false);
+        //bluePanel.setBackground(panelColor);
         bluePanel.add(returnButton);
         bluePanel.add(pauseButton);
         bluePanel.add(skipButton);
@@ -176,8 +203,16 @@ public class AppFrame extends JFrame implements ActionListener {
         bluePanel.setBounds(this.screenSize.width / 2 - prefSize.width / 2,
                 this.screenSize.height - 2 * prefSize.height, prefSize.width, prefSize.height);
 
-        this.searchPanel = new JPanel();
-        this.searchPanel.setBackground(panelColor);
+        this.searchPanel = new JPanel()
+        {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                
+            }
+        };
+        searchPanel.setOpaque(false);
+        //this.searchPanel.setBackground(panelColor);
         this.searchPanel.add(this.searchField, BorderLayout.CENTER);
         this.searchPanel.add(this.searchButton, BorderLayout.EAST);
         Dimension searchprefSize = this.searchPanel.getPreferredSize();
@@ -202,16 +237,32 @@ public class AppFrame extends JFrame implements ActionListener {
                 }
             }
         };
-        JPanel progressBarPanel = new JPanel();
-        progressBarPanel.setBackground(panelColor);
+        JPanel progressBarPanel = new JPanel()
+        {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                
+            }
+        };
+        progressBarPanel.setOpaque(false);
+        //progressBarPanel.setBackground(panelColor);
         progressBarPanel.add(progressBar);
         prefSize = progressBarPanel.getPreferredSize();
         progressBarPanel.setBounds(this.screenSize.width / 2 - prefSize.width / 2,
                 this.screenSize.height - searchprefSize.height * 5, prefSize.width, prefSize.height);
 
         // PLAYLIST PANEL ACTIONS
-        this.playlistPanel = new JPanel(new BorderLayout());
-        this.playlistPanel.setBackground(panelColor);
+        this.playlistPanel = new JPanel(new BorderLayout())
+        {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                
+            }
+        };
+        playlistPanel.setOpaque(false);
+        //this.playlistPanel.setBackground(panelColor);
         this.playlistPanel.setBorder(BorderFactory.createTitledBorder("Playlists"));
 
         this.playlistModel = new DefaultListModel<>();
@@ -248,8 +299,16 @@ public class AppFrame extends JFrame implements ActionListener {
         this.playlistPanel.setBounds(this.screenSize.width - prefSize.width - 40, this.searchPanel.getPreferredSize().height, prefSize.width, this.screenSize.height-this.searchPanel.getPreferredSize().height*4);
 
         // USER PANEL ACTIONS
-        this.userPanel = new JPanel();
-        this.userPanel.setBackground(panelColor);
+        this.userPanel = new JPanel()
+        {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                
+            }
+        };
+        userPanel.setOpaque(false);
+        //this.userPanel.setBackground(panelColor);
         this.userPanel.setBorder(BorderFactory.createTitledBorder("User"));
         this.usernameLabel = new JLabel("Username: " + (activeUser != null ? activeUser.getName() : "Guest"));
         this.usernameLabel.setForeground(Color.WHITE);
@@ -268,6 +327,7 @@ public class AppFrame extends JFrame implements ActionListener {
         });
 
         this.userPanel.add(usernameLabel);
+        this.userPanel.add(this.addButton, BorderLayout.EAST);
         prefSize = this.userPanel.getPreferredSize();
         this.userPanel.setBounds(this.titleLabel.getPreferredSize().width+10, 20, prefSize.width, prefSize.height);
 
