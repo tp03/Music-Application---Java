@@ -1,5 +1,4 @@
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,43 +20,26 @@ public class Song {
         this.id = id;
         Connection connection = null;
         try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            String url = "jdbc:oracle:thin:@ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl";
-            String usern = "tzalews1";
-            String password = "tzalews1";
-            connection = DriverManager.getConnection(url, usern, password);
-            if (connection != null) {
-                System.out.println("Successful");
-            } else
-                System.out.println("Error");
+            DatabaseConnection DC = new DatabaseConnection();
+            connection = DC.MakeConnection();
             Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM song WHERE song_id = " + this.id);
-            while (resultSet.next()) {
-
-                this.name = resultSet.getString("name");
-                this.length = resultSet.getInt("length");
-                this.views = resultSet.getInt("views");
-                this.data = resultSet.getInt("data_id");
-
+            ResultSet rs = stmt.executeQuery("SELECT * FROM (SONG s join SONG_DATA sd on(sd.song_data_id = s.DATA_ID)) join AUTHOR_SONGS aus using(SONG_ID) WHERE song_id = " + this.id);
+            while (rs.next()) {
+                this.name = rs.getString("name");
+                this.length = rs.getInt("length");
+                this.views = rs.getInt("views");
+                this.data = rs.getInt("data_id");
+                this.author_id = rs.getInt("author_id");
+                this.imagePath = rs.getString("picture");
+                this.lyricsPath = rs.getString("lyrics");
+                this.recordingPath = rs.getString("music");
             }
-            ResultSet rs2 = stmt.executeQuery("SELECT author_id FROM author_songs WHERE song_id = " + this.id);
-            while (rs2.next()) {
-                this.author_id = rs2.getInt("author_id");
-            }
-            ResultSet rs3 = stmt.executeQuery("SELECT * FROM song_data WHERE song_data_id = " + this.data);
-            while (rs3.next()) {
-                this.imagePath = rs3.getString("picture");
-                this.lyricsPath = rs3.getString("lyrics");
-                this.recordingPath = rs3.getString("music");
-            }
-            ResultSet rs4 = stmt.executeQuery("SELECT name FROM author WHERE author_id = " + this.author_id);
-            while (rs4.next()) {
-                this.author_name = rs4.getString("name");
+            ResultSet rs2 = stmt.executeQuery("SELECT name FROM author WHERE author_id = " + this.author_id);
+            while (rs2.next()){
+                this.author_name = rs2.getString("name");
             }
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
