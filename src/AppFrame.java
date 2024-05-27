@@ -45,7 +45,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private Clip clip;
     private JProgressBar progressBar;
     private ActionListener timerAction;
-    private Spotify_user activeUser = null;
+    private Spotify_user activeUser;
     private JPanel songListPanel;
     private JScrollPane scrollPane = new JScrollPane(songListPanel);
     private JPanel searchPanel;
@@ -60,7 +60,10 @@ public class AppFrame extends JFrame implements ActionListener {
     private JLabel usernameLabel;
     private JLabel backgroundLabel;
 
+    private String newPlaylistName;
+
     AppFrame() {
+
         this.imageIcon = new ImageIcon("assets/logo1.png");
         Image image = imageIcon.getImage();
         Image newImage = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
