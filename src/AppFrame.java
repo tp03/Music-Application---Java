@@ -57,6 +57,14 @@ public class AppFrame extends JFrame implements ActionListener {
         initializePanels();
     }
 
+    public void initialize(){
+        initializeIcons();
+        initializeColors();
+        initializeButtons();
+        initializeFrame();
+        initializePanels();
+    }
+
     private void initializeIcons() {
         this.imageIcon = createScaledIcon("assets/logo1.png", 100, 100);
         this.returnIcon = createScaledIcon("assets/return.png", 50, 50);
@@ -140,12 +148,11 @@ public class AppFrame extends JFrame implements ActionListener {
         }
         this.searchField = createSearchField();
         this.searchPanel = createSearchPanel();
+        this.playlistPanel = createPlaylistPanel();
         this.scrollPane = createScrollPane();
         
-        this.playlistPanel = createPlaylistPanel();
         this.userPanel = createUserPanel();
 
-        
         this.add(createControlPanel());
         this.add(searchPanel);
         this.add(scrollPane);
@@ -256,7 +263,14 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createTitledBorder("Playlists"));
 
-        this.playlistModel = new DefaultListModel<>();
+        ArrayList<Playlist> playlists = null;
+        if (activeUser != null) {
+            playlists = activeUser.getPlaylists();
+            for (Playlist playlist : playlists) {
+                playlistModel.addElement(playlist);
+            }
+        }
+
         this.playlistList = new JList<>(playlistModel);
         this.playlistList.setCellRenderer(new PlaylistCellRenderer());
 
@@ -405,6 +419,9 @@ public class AppFrame extends JFrame implements ActionListener {
                     JMenuItem addToPlaylistItem = new JMenuItem("Add to Playlist");
                     addToPlaylistItem.addActionListener(event -> {
                         addToPlaylist(song);
+                        playlistPanel.revalidate();
+                        playlistPanel.repaint();
+                        // drawCustom();
                     });
                     popupMenu.add(addToPlaylistItem);
                     popupMenu.show(songPanel, e.getX(), e.getY());
@@ -560,6 +577,42 @@ public class AppFrame extends JFrame implements ActionListener {
     void setActiveUser(Spotify_user user) {
         this.activeUser = user;
     }
+
+    public void drawCustom() {
+        if (this.activeUser != null) {
+            this.setTitle(this.activeUser.getName());
+        }
+        drawSongs();
+        // remove(this.playlistPanel);
+        // JPanel playlistPanel = createPlaylistPanel();
+        // this.add(playlistPanel);
+        // this.playlistPanel = playlistPanel;
+    }
+
+    public void drawSongs() {
+        this.remove(this.scrollPane);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.songListPanel = new JPanel(new GridLayout(0, 1));
+        songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        songListPanel.setBackground(panelColor);
+
+        ArrayList<Song> songs = createSongsArray();
+
+        for (Song song : songs) {
+            JPanel songPanel = createSongPanel(song);
+            System.out.println(song.getName());
+            songListPanel.add(songPanel);
+        }
+        Dimension searchprefSize = this.searchPanel.getPreferredSize();
+        JScrollPane scrollPane = new JScrollPane(songListPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        Dimension prefSize = scrollPane.getPreferredSize();
+        scrollPane.setBounds(screenSize.width / 2 - prefSize.width / 2, searchprefSize.height, prefSize.width,
+                screenSize.height - searchprefSize.height * 6);
+        this.add(scrollPane);
+        this.scrollPane = scrollPane;
+    }
+
     
     private class PlaylistCellRenderer extends DefaultListCellRenderer {
         @Override
