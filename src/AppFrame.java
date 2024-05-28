@@ -50,6 +50,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private ImageIcon searchIcon;
     private ImageIcon backgroundIcon;
     private JLabel titleLabel;
+    private String searchQuery = "";
 
     AppFrame() {
         initializeIcons();
@@ -148,7 +149,20 @@ public class AppFrame extends JFrame implements ActionListener {
         songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         songListPanel.setBackground(panelColor);
 
-        ArrayList<Song> songs = createSongsArray();
+        ArrayList<Song> songs;
+        String inputText = this.searchQuery;
+        this.searchQuery = "";
+
+        if (inputText.equals("")) {
+            songs = createSongsArray();
+        } else {
+            SearchEngine searchEngine = new SearchEngine();
+            searchEngine.make_song_search(inputText);
+            songs = searchEngine.returned_songs;
+            searchEngine.make_author_search(inputText);
+            songs.addAll(searchEngine.returned_songs);
+            System.out.println(songs);
+        }
 
         for (Song song : songs) {
             JPanel songPanel = createSongPanel(song);
@@ -455,6 +469,9 @@ public class AppFrame extends JFrame implements ActionListener {
             handleSearch();
         } else if (source == addButton) {
             handleAddSong();
+        } else if (source == searchButton) {
+            this.searchQuery = this.searchField.getText();
+
         }
     }
 
@@ -502,7 +519,11 @@ public class AppFrame extends JFrame implements ActionListener {
             // Logic to search for songs based on searchText
             System.out.println("Search performed for: " + searchText);
             // Example: Clear the song list panel and add search results
+            this.searchQuery = searchText;
+            System.out.println(this.searchQuery);
+
         }
+        drawCustom();
     }
 
     private void handleAddSong() {
