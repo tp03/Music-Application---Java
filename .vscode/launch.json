@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug JUnit Tests",
+            "request": "launch",
+            "mainClass": "org.junit.platform.console.ConsoleLauncher",
+            "args": [
+                "--class-path", "bin:lib/*",
+                "--scan-class-path"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
