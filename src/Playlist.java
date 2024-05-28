@@ -65,10 +65,10 @@ public class Playlist {
             DatabaseConnection DC = new DatabaseConnection();
             connection = DC.MakeConnection();
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM song_and_playlist");
+            ResultSet rs = stmt.executeQuery("SELECT MAX(song_playlist_id) FROM song_and_playlist");
             int new_sap_id = 0;
             while (rs.next()) {
-                new_sap_id = rs.getInt("COUNT(*)") + 1;
+                new_sap_id = rs.getInt("MAX(song_playlist_id)") + 1;
             }
             String insert_query = "INSERT INTO song_and_playlist VALUES (" + new_sap_id + ", " + this.id + ", " + song_id + ")";
             PreparedStatement prepstat = connection.prepareStatement(insert_query);

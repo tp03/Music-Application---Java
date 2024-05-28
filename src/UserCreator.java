@@ -34,7 +34,7 @@ public class UserCreator {
             else
                 System.out.println("Error");
 
-            String in_query2 = "SELECT COUNT(*) FROM app_user";
+            String in_query2 = "SELECT MAX(user_id) FROM app_user";
             
             Statement stmt = connection.createStatement();
 
@@ -42,7 +42,7 @@ public class UserCreator {
 
             while (resultSet.next()) {
 
-                this.id = resultSet.getInt("COUNT(*)") + 1;
+                this.id = resultSet.getInt("MAX(user_id)") + 1;
             }
             
             String insert_query = "INSERT INTO app_user VALUES ("
