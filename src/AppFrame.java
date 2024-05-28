@@ -29,8 +29,8 @@ public class AppFrame extends JFrame implements ActionListener {
     private JTextField searchField;
     private JPanel searchPanel;
     private JPanel playlistPanel;
-    private DefaultListModel<String> playlistModel;
-    private JList<String> playlistList;
+    private DefaultListModel<Playlist> playlistModel = new DefaultListModel<>();
+    private JList<Playlist> playlistList;
     private JPanel userPanel;
     private JLabel usernameLabel;
     private JLabel backgroundLabel;
@@ -258,19 +258,34 @@ public class AppFrame extends JFrame implements ActionListener {
 
         this.playlistModel = new DefaultListModel<>();
         this.playlistList = new JList<>(playlistModel);
+        this.playlistList.setCellRenderer(new PlaylistCellRenderer());
+
         JScrollPane playlistScrollPane = new JScrollPane(playlistList);
 
         JPanel playlistButtonPanel = new JPanel();
         playlistButtonPanel.add(createButton("Add Playlist", e -> {
             String playlistName = JOptionPane.showInputDialog("Enter playlist name:");
             if (playlistName != null && !playlistName.trim().isEmpty()) {
-                playlistModel.addElement(playlistName);
+                Playlist playlist = activeUser.createPlaylist(playlistName);
+                if (playlist != null) {
+                    playlistModel.addElement(playlist);
+                }
+                
             }
         }));
         playlistButtonPanel.add(createButton("Remove Playlist", e -> {
             int selectedIndex = playlistList.getSelectedIndex();
             if (selectedIndex != -1) {
+                Playlist playlist = playlistModel.getElementAt(selectedIndex);
                 playlistModel.remove(selectedIndex);
+                activeUser.deletePlaylist(playlist);
+            }
+        }));
+        playlistButtonPanel.add(createButton("Open Playlist", e -> {
+            int selectedIndex = playlistList.getSelectedIndex();
+            if (selectedIndex != -1) {
+                Playlist playlist = playlistModel.getElementAt(selectedIndex);
+                showPlaylistSongs(playlist);
             }
         }));
 
@@ -279,6 +294,33 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width - panel.getPreferredSize().width - 40, searchPanel.getPreferredSize().height, panel.getPreferredSize().width, Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 4);
         return panel;
     }
+
+    private void showPlaylistSongs(Playlist playlist) {
+        JDialog dialog = new JDialog((Frame) null, "Playlist: " + playlist.getName(), true);
+        dialog.setLayout(new BorderLayout());
+    
+        DefaultListModel<Song> songModel = new DefaultListModel<>();
+        JList<Song> songList = new JList<>(songModel);
+        songList.setCellRenderer(new SongCellRenderer());
+    
+        for (Song song : playlist.getSongs()) {
+            songModel.addElement(song);
+        }
+    
+        JScrollPane songScrollPane = new JScrollPane(songList);
+        dialog.add(songScrollPane, BorderLayout.CENTER);
+    
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> dialog.dispose());
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(closeButton);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+    
+        dialog.setSize(300, 400);
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+    }
+    
 
     private JButton createButton(String text, ActionListener listener) {
         JButton button = new JButton(text);
@@ -354,33 +396,71 @@ public class AppFrame extends JFrame implements ActionListener {
         songPanel.add(Box.createHorizontalGlue());
         songPanel.add(imageLabel);
 
-        ((JComponent) songPanel).addMouseListener(new MouseAdapter() {
+        songPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                String recordingPath = song.getRecordingPath();
-                if (recordingPath != null && !recordingPath.isEmpty()) {
-                    try {
-                        if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
-                            AppFrame.this.clip.stop();
-                            AppFrame.this.clip.close();
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    // Right-clicked
+                    JPopupMenu popupMenu = new JPopupMenu();
+                    JMenuItem addToPlaylistItem = new JMenuItem("Add to Playlist");
+                    addToPlaylistItem.addActionListener(event -> {
+                        addToPlaylist(song);
+                    });
+                    popupMenu.add(addToPlaylistItem);
+                    popupMenu.show(songPanel, e.getX(), e.getY());
+                } else if (SwingUtilities.isLeftMouseButton(e)) {
+                    // Left-clicked
+                    String recordingPath = song.getRecordingPath();
+                    if (recordingPath != null && !recordingPath.isEmpty()) {
+                        try {
+                            if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
+                                AppFrame.this.clip.stop();
+                                AppFrame.this.clip.close();
+                            }
+                            File recordingFile = new File(recordingPath);
+                            AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
+                            AppFrame.this.clip = AudioSystem.getClip();
+                            AppFrame.this.clip.open(audioStream);
+                            AppFrame.this.clip.start();
+    
+                            Timer timer = new Timer(100, timerAction);
+                            timer.start();
+                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                            ex.printStackTrace();
                         }
-                        File recordingFile = new File(recordingPath);
-                        AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
-                        AppFrame.this.clip = AudioSystem.getClip();
-                        AppFrame.this.clip.open(audioStream);
-                        AppFrame.this.clip.start();
-
-                        Timer timer = new Timer(100, timerAction);
-                        timer.start();
-                    } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
-                        ex.printStackTrace();
                     }
                 }
             }
         });
 
         return songPanel;
+    }
 
+    private void addToPlaylist(Song song) {
+        ArrayList<Playlist> playlists = activeUser.getPlaylists();
+        
+        JComboBox<Playlist> playlistComboBox = new JComboBox<>(playlists.toArray(new Playlist[0]));
+        playlistComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value instanceof Playlist) {
+                    Playlist playlist = (Playlist) value;
+                    return super.getListCellRendererComponent(list, playlist.getName(), index, isSelected, cellHasFocus);
+                }
+                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            }
+        });
+        
+        int result = JOptionPane.showConfirmDialog(this, playlistComboBox, "Choose Playlist", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            Playlist selectedPlaylist = (Playlist) playlistComboBox.getSelectedItem();
+            if (selectedPlaylist != null) {
+                selectedPlaylist.addSong(song);
+                JOptionPane.showMessageDialog(this, "Song added to playlist: " + selectedPlaylist.getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No playlist selected!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private ArrayList<Song> createSongsArray() {
@@ -406,7 +486,6 @@ public class AppFrame extends JFrame implements ActionListener {
         }
         return songs;
     }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -481,5 +560,29 @@ public class AppFrame extends JFrame implements ActionListener {
     void setActiveUser(Spotify_user user) {
         this.activeUser = user;
     }
+    
+    private class PlaylistCellRenderer extends DefaultListCellRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof Playlist) {
+                Playlist playlist = (Playlist) value;
+                setText(playlist.getName());
+            }
+            return this;
+        }
+    }
 
+    private class SongCellRenderer extends DefaultListCellRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof Song) {
+                Song song = (Song) value;
+                setText(song.getName());
+            }
+            return this;
+        }
+    }
 }
+

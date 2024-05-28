@@ -125,4 +125,9 @@ public class Playlist {
     {
         return this.id;
     }
+
+    public ArrayList<Song> getSongs()
+    {
+        return this.songs;
+    }
 }
