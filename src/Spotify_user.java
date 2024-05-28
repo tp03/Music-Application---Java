@@ -71,16 +71,16 @@ public class Spotify_user {
         return this.email;
     }
 
-    void createPlaylist(String playlist_name)
+    Playlist createPlaylist(String playlist_name)
     {
         Connection connection = null;
+        int new_id = 0;
         try {
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
             String in_query = "SELECT COUNT(*) FROM playlist";          
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(in_query);
-            int new_id = 0;
             while (resultSet.next()) {
 
                 new_id = resultSet.getInt("COUNT(*)") + 1;
@@ -101,7 +101,9 @@ public class Spotify_user {
             stmt.close();            
         } catch (SQLException e) {
             e.printStackTrace();
-        }        
+        }
+        Playlist playlist = new Playlist(new_id);
+        return playlist;
     }
 
     ArrayList<Playlist> downloadUserPlaylistsFromServer()
