@@ -407,6 +407,9 @@ public class AppFrame extends JFrame implements ActionListener {
         } else if (e.getSource() == searchButton) {
             String searchTerm = this.searchField.getText();
             System.out.println("Searching for: " + searchTerm);
+        } else if (e.getSource() == addButton) {
+            String songName = JOptionPane.showInputDialog("Enter playlist name:");
+            String songAutor = JOptionPane.showInputDialog("Enter playlist author:");
         }
     }
 
