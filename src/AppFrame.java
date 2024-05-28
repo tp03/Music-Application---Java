@@ -28,11 +28,8 @@ public class AppFrame extends JFrame implements ActionListener {
     private JScrollPane scrollPane;
     private JTextField searchField;
     private JPanel searchPanel;
-<<<<<<< HEAD
-    private SongImport songImporter = new SongImport("/recordings", "/assets");
+    private SongImport songImporter = new SongImport("recordings", "assets");
 
-=======
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
     private JPanel playlistPanel;
     private DefaultListModel<String> playlistModel;
     private JList<String> playlistList;
@@ -78,8 +75,6 @@ public class AppFrame extends JFrame implements ActionListener {
         return new ImageIcon(image);
     }
 
-<<<<<<< HEAD
-=======
     private void initializeColors() {
         this.backgroundColor = new Color(230, 138, 0);
         this.textColor = new Color(0, 0, 0);
@@ -87,7 +82,6 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private void initializeButtons() {
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
         this.buttonWidth = 100;
         this.songWidth = 600;
 
@@ -121,7 +115,6 @@ public class AppFrame extends JFrame implements ActionListener {
         this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
         this.setContentPane(backgroundLabel);
 
-
         this.progressBar = new JProgressBar(0, 100);
         this.progressBar.setStringPainted(true);
         this.progressBar.setPreferredSize(new Dimension(songWidth, 50));
@@ -141,7 +134,38 @@ public class AppFrame extends JFrame implements ActionListener {
         this.setLayout(null);
     }
 
-    private void initializePanels() {
+    public void drawCustom() {
+        if (this.activeUser != null) {
+            this.setTitle(this.activeUser.getName());
+        }
+        drawSongs();
+    }
+
+    public void drawSongs() {
+        this.remove(this.scrollPane);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.songListPanel = new JPanel(new GridLayout(0, 1));
+        songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        songListPanel.setBackground(panelColor);
+
+        ArrayList<Song> songs = createSongsArray();
+
+        for (Song song : songs) {
+            JPanel songPanel = createSongPanel(song);
+            System.out.println(song.getName());
+            songListPanel.add(songPanel);
+        }
+        Dimension searchprefSize = this.searchPanel.getPreferredSize();
+        JScrollPane scrollPane = new JScrollPane(songListPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        Dimension prefSize = scrollPane.getPreferredSize();
+        scrollPane.setBounds(screenSize.width / 2 - prefSize.width / 2, searchprefSize.height, prefSize.width,
+                screenSize.height - searchprefSize.height * 6);
+        this.add(scrollPane);
+        this.scrollPane = scrollPane;
+    }
+
+    public void initializePanels() {
         if (this.activeUser != null) {
             this.setTitle(this.activeUser.getName());
             this.usernameLabel.setText("Username: " + this.activeUser.getName());
@@ -149,11 +173,10 @@ public class AppFrame extends JFrame implements ActionListener {
         this.searchField = createSearchField();
         this.searchPanel = createSearchPanel();
         this.scrollPane = createScrollPane();
-        
+
         this.playlistPanel = createPlaylistPanel();
         this.userPanel = createUserPanel();
 
-        
         this.add(createControlPanel());
         this.add(searchPanel);
         this.add(scrollPane);
@@ -163,29 +186,12 @@ public class AppFrame extends JFrame implements ActionListener {
         this.add(createTopPanel(titleLabel));
     }
 
-    private JScrollPane createScrollPane(){
+    private JScrollPane createScrollPane() {
         this.songListPanel = new JPanel(new GridLayout(0, 1));
         songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         songListPanel.setBackground(panelColor);
         ArrayList<Song> songs = createSongsArray();
 
-<<<<<<< HEAD
-        // PANEL ACTIONS
-        JPanel redPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-
-            }
-        };
-        redPanel.setOpaque(false);
-        // redPanel.setBackground(panelColor);
-        redPanel.add(titleLabel);
-        Dimension prefSize = redPanel.getPreferredSize();
-        redPanel.setBounds(0, 0, prefSize.width, prefSize.height);
-
-        JPanel bluePanel = new JPanel() {
-=======
         for (Song song : songs) {
             JPanel songPanel = createSongPanel(song);
             System.out.println(song.getName());
@@ -211,72 +217,29 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createSearchPanel() {
-        JPanel panel = new JPanel(){
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
+        JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
             }
         };
-<<<<<<< HEAD
-        bluePanel.setOpaque(false);
-        // bluePanel.setBackground(panelColor);
-        bluePanel.add(returnButton);
-        bluePanel.add(pauseButton);
-        bluePanel.add(skipButton);
-        prefSize = bluePanel.getPreferredSize();
-        bluePanel.setBounds(this.screenSize.width / 2 - prefSize.width / 2,
-                this.screenSize.height - 2 * prefSize.height, prefSize.width, prefSize.height);
-
-        this.searchPanel = new JPanel() {
-=======
         panel.setOpaque(false);
         panel.add(searchField, BorderLayout.CENTER);
         panel.add(searchButton, BorderLayout.EAST);
-        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - panel.getPreferredSize().width / 2, 0, panel.getPreferredSize().width, panel.getPreferredSize().height);
+        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - panel.getPreferredSize().width / 2, 0,
+                panel.getPreferredSize().width, panel.getPreferredSize().height);
         return panel;
     }
 
     private JPanel createTopPanel(JLabel label) {
-        JPanel panel = new JPanel()
-        {
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
+        JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
             }
         };
-<<<<<<< HEAD
-        searchPanel.setOpaque(false);
-        // this.searchPanel.setBackground(panelColor);
-        this.searchPanel.add(this.searchField, BorderLayout.CENTER);
-        this.searchPanel.add(this.searchButton, BorderLayout.EAST);
-        Dimension searchprefSize = this.searchPanel.getPreferredSize();
-        this.searchPanel.setBounds(this.screenSize.width / 2 - searchprefSize.width / 2, 0, searchprefSize.width,
-                searchprefSize.height);
-
-        // scrollPane.setBounds(this.screenSize.width/2 -
-        // prefSize.width/2,searchprefSize.height,prefSize.width, prefSize.height);
-
-        // PROGRESS BAR ACTIONS
-        this.progressBar = new JProgressBar(0, 100);
-        this.progressBar.setStringPainted(true);
-        this.progressBar.setPreferredSize(new Dimension(songWidth, 50));
-        this.timerAction = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Update the progress bar based on the current position of the clip
-                if (clip != null && AppFrame.this.clip.isOpen() && AppFrame.this.clip.isRunning()) {
-                    long currentPosition = AppFrame.this.clip.getMicrosecondPosition();
-                    long totalLength = AppFrame.this.clip.getMicrosecondLength();
-                    double progress = (double) currentPosition / totalLength;
-                    AppFrame.this.progressBar.setValue((int) (progress * 100)); // Set the progress bar value
-                }
-            }
-        };
-        JPanel progressBarPanel = new JPanel() {
-=======
         panel.setOpaque(false);
         panel.add(label);
         Dimension prefSize = panel.getPreferredSize();
@@ -285,55 +248,38 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createControlPanel() {
-        JPanel panel = new JPanel()
-        {
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
+        JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
             }
         };
-<<<<<<< HEAD
-        progressBarPanel.setOpaque(false);
-        // progressBarPanel.setBackground(panelColor);
-        progressBarPanel.add(progressBar);
-        prefSize = progressBarPanel.getPreferredSize();
-        progressBarPanel.setBounds(this.screenSize.width / 2 - prefSize.width / 2,
-                this.screenSize.height - searchprefSize.height * 5, prefSize.width, prefSize.height);
-
-        // PLAYLIST PANEL ACTIONS
-        this.playlistPanel = new JPanel(new BorderLayout()) {
-=======
         panel.setOpaque(false);
         panel.add(returnButton);
         panel.add(pauseButton);
         panel.add(skipButton);
         Dimension prefSize = panel.getPreferredSize();
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - prefSize.width / 2,
-        Toolkit.getDefaultToolkit().getScreenSize().height - 2 * prefSize.height, prefSize.width, prefSize.height);
+                Toolkit.getDefaultToolkit().getScreenSize().height - 2 * prefSize.height, prefSize.width,
+                prefSize.height);
         return panel;
     }
 
     private JPanel createProgressBarPanel() {
-        JPanel panel = new JPanel(){
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
+        JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
             }
         };
-<<<<<<< HEAD
-        playlistPanel.setOpaque(false);
-        // this.playlistPanel.setBackground(panelColor);
-        this.playlistPanel.setBorder(BorderFactory.createTitledBorder("Playlists"));
-=======
         panel.setOpaque(false);
         panel.add(progressBar);
         Dimension prefSize = panel.getPreferredSize();
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - prefSize.width / 2,
-            Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 5, prefSize.width, prefSize.height);
+                Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 5,
+                prefSize.width, prefSize.height);
         return panel;
     }
 
@@ -341,7 +287,6 @@ public class AppFrame extends JFrame implements ActionListener {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createTitledBorder("Playlists"));
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
 
         this.playlistModel = new DefaultListModel<>();
         this.playlistList = new JList<>(playlistModel);
@@ -363,21 +308,12 @@ public class AppFrame extends JFrame implements ActionListener {
 
         panel.add(playlistScrollPane, BorderLayout.CENTER);
         panel.add(playlistButtonPanel, BorderLayout.SOUTH);
-        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width - panel.getPreferredSize().width - 40, searchPanel.getPreferredSize().height, panel.getPreferredSize().width, Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 4);
+        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width - panel.getPreferredSize().width - 40,
+                searchPanel.getPreferredSize().height, panel.getPreferredSize().width,
+                Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 4);
         return panel;
     }
 
-<<<<<<< HEAD
-        this.playlistPanel.add(playlistScrollPane, BorderLayout.CENTER);
-        this.playlistPanel.add(playlistButtonPanel, BorderLayout.SOUTH);
-        prefSize = this.playlistPanel.getPreferredSize();
-        this.playlistPanel.setBounds(this.screenSize.width - prefSize.width - 40,
-                this.searchPanel.getPreferredSize().height, prefSize.width,
-                this.screenSize.height - this.searchPanel.getPreferredSize().height * 4);
-
-        // USER PANEL ACTIONS
-        this.userPanel = new JPanel() {
-=======
     private JButton createButton(String text, ActionListener listener) {
         JButton button = new JButton(text);
         button.addActionListener(listener);
@@ -385,22 +321,15 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createUserPanel() {
-        JPanel panel = new JPanel(){
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
+        JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
             }
         };
-<<<<<<< HEAD
-        userPanel.setOpaque(false);
-        // this.userPanel.setBackground(panelColor);
-        this.userPanel.setBorder(BorderFactory.createTitledBorder("User"));
-=======
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createTitledBorder("User"));
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
         this.usernameLabel = new JLabel("Username: " + (activeUser != null ? activeUser.getName() : "Guest"));
         this.usernameLabel.setForeground(Color.WHITE);
         this.usernameLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -417,125 +346,11 @@ public class AppFrame extends JFrame implements ActionListener {
             }
         });
 
-<<<<<<< HEAD
-        this.userPanel.add(usernameLabel);
-        this.userPanel.add(this.addButton, BorderLayout.EAST);
-        prefSize = this.userPanel.getPreferredSize();
-        this.userPanel.setBounds(this.titleLabel.getPreferredSize().width + 10, 20, prefSize.width, prefSize.height);
-
-        // FRAME ACTIONS
-        if (this.activeUser != null) {
-            this.setTitle(this.activeUser.getName());
-        }
-        this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
-        this.setContentPane(backgroundLabel);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setResizable(false);
-        this.setLayout(null);
-        // this.add(titleLabel);
-        this.add(redPanel);
-        this.add(bluePanel);
-        this.add(searchPanel);
-        // this.add(songListPanel, BorderLayout.CENTER);
-        this.add(scrollPane);
-        this.add(progressBarPanel);
-        this.add(playlistPanel);
-        this.add(userPanel);
-        // this.getContentPane().setBackground(backgroundColor);
-        drawCustom();
-    }
-
-    public void drawCustom() {
-        if (this.activeUser != null) {
-            this.setTitle(this.activeUser.getName());
-            this.usernameLabel.setText("Username: " + this.activeUser.getName());
-        }
-        drawSongs();
-    }
-
-    public void drawSongs() {
-        this.remove(this.scrollPane);
-        this.songListPanel = new JPanel(new GridLayout(0, 1));
-        songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        songListPanel.setBackground(panelColor);
-
-        ArrayList<Song> songs = createSongsArray();
-
-        for (Song song : songs) {
-            JPanel songPanel = createSongPanel(song);
-            System.out.println(song.getName());
-            songListPanel.add(songPanel);
-        }
-        Dimension searchprefSize = this.searchPanel.getPreferredSize();
-        JScrollPane scrollPane = new JScrollPane(songListPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        Dimension prefSize = scrollPane.getPreferredSize();
-        scrollPane.setBounds(this.screenSize.width / 2 - prefSize.width / 2, searchprefSize.height, prefSize.width,
-                this.screenSize.height - searchprefSize.height * 6);
-        this.add(scrollPane);
-        this.scrollPane = scrollPane;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == skipButton) {
-            System.out.println("skip");
-            long clipLength = this.clip.getMicrosecondLength();
-            this.clip.setMicrosecondPosition(clipLength);
-        } else if (e.getSource() == addButton) {
-            this.songImporter.ImportSong("newSongName", "newSongAuthor");
-        } else if (e.getSource() == pauseButton) {
-            if (pauseButton.getIcon().equals(pauseIcon)) {
-                pauseButton.setIcon(playIcon);
-                System.out.println("pause");
-                this.clip.stop();
-            } else {
-                pauseButton.setIcon(pauseIcon);
-                System.out.println("play");
-                this.clip.start();
-            }
-
-        } else if (e.getSource() == returnButton) {
-            System.out.println("return");
-            this.clip.setMicrosecondPosition(0);
-        } else if (e.getSource() == searchButton) {
-            String searchTerm = this.searchField.getText();
-            System.out.println("Searching for: " + searchTerm);
-        } else if (e.getSource() == addButton) {
-            String songName = JOptionPane.showInputDialog("Enter playlist name:");
-            String songAutor = JOptionPane.showInputDialog("Enter playlist author:");
-        }
-    }
-
-    private ArrayList<Song> createSongsArray() {
-        ArrayList<Song> songs = new ArrayList<>();
-        try {
-            DatabaseConnection newCon = new DatabaseConnection();
-            Connection connection = newCon.MakeConnection();
-            String in_query2 = "SELECT COUNT(*) FROM song_data";
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery(in_query2);
-            int idMax = 1;
-            while (resultSet.next()) {
-
-                idMax = resultSet.getInt("COUNT(*)");
-            }
-            System.out.println(idMax);
-
-            for (int id = 1; id <= idMax; id++) {
-                songs.add(new Song(id));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return songs;
-=======
         panel.add(usernameLabel);
         panel.add(addButton, BorderLayout.EAST);
         Dimension prefSize = panel.getPreferredSize();
-        panel.setBounds(this.titleLabel.getPreferredSize().width+10, 20, prefSize.width, prefSize.height);
+        panel.setBounds(this.titleLabel.getPreferredSize().width + 10, 20, prefSize.width, prefSize.height);
         return panel;
->>>>>>> f07b72229d8850483a3aac3dfbb7b0c3434f11d1
     }
 
     private JPanel createSongPanel(Song song) {
@@ -626,7 +441,6 @@ public class AppFrame extends JFrame implements ActionListener {
         return songs;
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -692,8 +506,10 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private void handleAddSong() {
-        String songName = JOptionPane.showInputDialog("Enter playlist name:");
-        String songAutor = JOptionPane.showInputDialog("Enter playlist author:");
+        String songName = JOptionPane.showInputDialog("Enter song name:");
+        String songAutor = JOptionPane.showInputDialog("Enter song author:");
+        songImporter.ImportSong(songName, songAutor);
+        drawCustom();
 
     }
 
