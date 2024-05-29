@@ -54,11 +54,11 @@ public class AppFrame extends JFrame implements ActionListener {
     private String searchQuery = "";
 
     AppFrame() {
-        // initializeIcons();
-        // initializeColors();
-        // initializeButtons();
-        // initializeFrame();
-        // initializePanels();
+        initializeIcons();
+        initializeColors();
+        initializeButtons();
+        initialize1Frame();
+        initializePanels();
     }
 
     public void initialize() {
@@ -158,6 +158,38 @@ public class AppFrame extends JFrame implements ActionListener {
         this.setLayout(null);
     }
 
+    private void initialize1Frame() {
+        this.titleLabel = new JLabel(imageIcon);
+        this.titleLabel.setForeground(textColor);
+        this.titleLabel.setFont(new Font("Monospaced", Font.PLAIN, 20));
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.backgroundIcon = createScaledIcon("assets/green_background.jpg", screenSize.width,
+                screenSize.height);
+        this.backgroundLabel = new JLabel(this.backgroundIcon);
+        this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
+        this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
+        this.setContentPane(backgroundLabel);
+
+        this.progressBar = new JProgressBar(0, 100);
+        this.progressBar.setStringPainted(true);
+        this.progressBar.setPreferredSize(new Dimension(songWidth, 50));
+
+        this.timerAction = e -> {
+            if (clip != null && clip.isOpen() && clip.isRunning()) {
+                long currentPosition = clip.getMicrosecondPosition();
+                long totalLength = clip.getMicrosecondLength();
+                double progress = (double) currentPosition / totalLength;
+                progressBar.setValue((int) (progress * 100));
+            }
+        };
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setResizable(false);
+        this.setLayout(null);
+    }
+
     public void initializePanels() {
         if (this.activeUser != null) {
             this.setTitle(this.activeUser.getName());
@@ -220,7 +252,7 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.setOpaque(false);
         panel.add(searchField, BorderLayout.CENTER);
         panel.add(searchButton, BorderLayout.EAST);
-        panel.add(addButton, BorderLayout.EAST);
+        panel.add(colorButton, BorderLayout.EAST);
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - panel.getPreferredSize().width / 2, 0,
                 panel.getPreferredSize().width, panel.getPreferredSize().height);
         return panel;
@@ -554,7 +586,7 @@ public class AppFrame extends JFrame implements ActionListener {
             String selectedColor = showColorDialog(this);
             if (!selectedColor.equals("")) {
                 this.activeUser.setpreferedColor(selectedColor);
-                setBackground();
+                initialize();
             }
         }
     }
@@ -648,7 +680,7 @@ public class AppFrame extends JFrame implements ActionListener {
         String songName = JOptionPane.showInputDialog("Enter song name:");
         String songAutor = JOptionPane.showInputDialog("Enter song author:");
         songImporter.ImportSong(songName, songAutor);
-        initialize();
+        drawCustom();
 
     }
 
