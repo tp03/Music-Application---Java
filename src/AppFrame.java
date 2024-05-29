@@ -50,11 +50,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JLabel titleLabel;
 
     AppFrame() {
-        initializeIcons();
-        initializeColors();
-        initializeButtons();
-        initializeFrame();
-        initializePanels();
+        initialize();
     }
 
     public void initialize(){
@@ -120,7 +116,6 @@ public class AppFrame extends JFrame implements ActionListener {
         this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
         this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
         this.setContentPane(backgroundLabel);
-
 
         this.progressBar = new JProgressBar(0, 100);
         this.progressBar.setStringPainted(true);
@@ -262,7 +257,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JPanel createPlaylistPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
-        panel.setBackground(Color.ORANGE);
+        panel.setBackground(new Color(0, 0, 0, 0)); 
         panel.setBorder(BorderFactory.createTitledBorder("Playlists"));
 
         ArrayList<Playlist> playlists = null;
@@ -277,8 +272,11 @@ public class AppFrame extends JFrame implements ActionListener {
         this.playlistList.setCellRenderer(new PlaylistCellRenderer());
 
         JScrollPane playlistScrollPane = new JScrollPane(playlistList);
+        playlistScrollPane.setOpaque(false);
+        playlistScrollPane.getViewport().setOpaque(false);
 
         JPanel playlistButtonPanel = new JPanel();
+        playlistButtonPanel.setOpaque(false);
         playlistButtonPanel.add(createButton("Add Playlist", e -> {
             String playlistName = JOptionPane.showInputDialog("Enter playlist name:");
             if (playlistName != null && !playlistName.trim().isEmpty()) {
@@ -624,12 +622,12 @@ public class AppFrame extends JFrame implements ActionListener {
         public PlaylistCellRenderer() {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+            setForeground(Color.WHITE);
             setBackground(Color.ORANGE);
-
-            nameLabel = new JLabel();
-            nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
-            nameLabel.setForeground(Color.BLACK);
-            add(nameLabel, BorderLayout.CENTER);
+            setFont(new Font("Arial", Font.BOLD, 30));
+            setOpaque(true);
+            setPreferredSize(new Dimension(200, 60));
+            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         }
 
         @Override
@@ -638,6 +636,11 @@ public class AppFrame extends JFrame implements ActionListener {
             if (value instanceof Playlist) {
                 Playlist playlist = (Playlist) value;
                 setText(playlist.getName());
+            }
+            if (isSelected) {
+                setBackground(Color.LIGHT_GRAY);
+            } else {
+                setBackground(Color.ORANGE);
             }
             return this;
         }
@@ -655,4 +658,3 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 }
-
