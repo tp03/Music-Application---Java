@@ -39,12 +39,14 @@ public class AppFrame extends JFrame implements ActionListener {
     private JButton returnButton;
     private JButton searchButton;
     private JButton addButton;
+    private JButton colorButton;
     private ImageIcon imageIcon;
     private ImageIcon returnIcon;
     private ImageIcon skipIcon;
     private ImageIcon pauseIcon;
     private ImageIcon playIcon;
     private ImageIcon addIcon;
+    private ImageIcon colorIcon;
     private ImageIcon searchIcon;
     private ImageIcon backgroundIcon;
     private JLabel titleLabel;
@@ -69,6 +71,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.playIcon = createScaledIcon("assets/play.png", 50, 50);
         this.searchIcon = createScaledIcon("assets/search.png", 30, 30);
         this.addIcon = createScaledIcon("assets/add.png", 30, 30);
+        this.colorIcon = createScaledIcon("assets/play.png", 50, 50);
     }
 
     private ImageIcon createScaledIcon(String path, int width, int height) {
@@ -92,6 +95,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.returnButton = createButton(returnIcon, buttonWidth, buttonWidth, Color.BLACK);
         this.searchButton = createButton(searchIcon, 80, 50, Color.BLACK);
         this.addButton = createButton(addIcon, 80, 50, Color.BLACK);
+        this.colorButton = createButton(addIcon, 30, 30, Color.BLACK);
 
         this.searchButton.setFont(new Font("Arial", Font.BOLD, 18));
         this.searchButton.setForeground(Color.WHITE);
@@ -379,6 +383,7 @@ public class AppFrame extends JFrame implements ActionListener {
         });
 
         panel.add(usernameLabel);
+        panel.add(colorButton);
         Dimension prefSize = panel.getPreferredSize();
         panel.setBounds(this.titleLabel.getPreferredSize().width+10, 20, prefSize.width, prefSize.height);
         return panel;
@@ -526,6 +531,8 @@ public class AppFrame extends JFrame implements ActionListener {
             handleSearch();
         } else if (source == addButton) {
             handleAddSong();
+        } else if (source == colorButton) {
+            handleChangeColor();
         }
     }
 
@@ -577,6 +584,12 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private void handleAddSong() {
+        String songName = JOptionPane.showInputDialog("Enter playlist name:");
+        String songAutor = JOptionPane.showInputDialog("Enter playlist author:");
+
+    }
+
+    private void handleChangeColor() {
         String songName = JOptionPane.showInputDialog("Enter playlist name:");
         String songAutor = JOptionPane.showInputDialog("Enter playlist author:");
 
