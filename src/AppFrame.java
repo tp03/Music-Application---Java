@@ -124,7 +124,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.titleLabel.setFont(new Font("Monospaced", Font.PLAIN, 20));
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.backgroundIcon = createScaledIcon("assets/" + this.activeUser.getpreferedColor(), screenSize.width,
+        this.backgroundIcon = createScaledIcon("assets/green_background.jpg" , screenSize.width,
                 screenSize.height);
         this.backgroundLabel = new JLabel(this.backgroundIcon);
         this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
@@ -499,7 +499,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
     private static String showColorDialog(Component parent) {
         // Definicja dostępnych kolorów
-        Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE };
+        Color[] colors = { Color.BLUE, Color.GREEN, Color.ORANGE };
         String[] colorNames = { "Blue", "Green", "Orange" };
         String[] colorFiles = { "blue_background.jpg", "green_background.jpg", "orange_background.jpeg" };
 
