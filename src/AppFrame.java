@@ -28,6 +28,8 @@ public class AppFrame extends JFrame implements ActionListener {
     private JScrollPane scrollPane;
     private JTextField searchField;
     private JPanel searchPanel;
+    private SongImport songImporter = new SongImport("lyrics", "recordings", "assets");
+
     private JPanel playlistPanel;
     private DefaultListModel<Playlist> playlistModel = new DefaultListModel<>();
     private JList<Playlist> playlistList;
@@ -50,9 +52,15 @@ public class AppFrame extends JFrame implements ActionListener {
     private ImageIcon searchIcon;
     private ImageIcon backgroundIcon;
     private JLabel titleLabel;
+    private String searchQuery = "";
+    public FileViewerPanel fileViewer;
 
     AppFrame() {
-        initialize();
+        initializeIcons();
+        initializeColors();
+        initializeButtons();
+        initialize1Frame();
+        initializePanels();
     }
 
     public void initialize(){
@@ -140,7 +148,39 @@ public class AppFrame extends JFrame implements ActionListener {
         this.setLayout(null);
     }
 
-    private void initializePanels() {
+    private void initialize1Frame() {
+        this.titleLabel = new JLabel(imageIcon);
+        this.titleLabel.setForeground(textColor);
+        this.titleLabel.setFont(new Font("Monospaced", Font.PLAIN, 20));
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.backgroundIcon = createScaledIcon("assets/green_background.jpg", screenSize.width,
+                screenSize.height);
+        this.backgroundLabel = new JLabel(this.backgroundIcon);
+        this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
+        this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
+        this.setContentPane(backgroundLabel);
+
+        this.progressBar = new JProgressBar(0, 100);
+        this.progressBar.setStringPainted(true);
+        this.progressBar.setPreferredSize(new Dimension(songWidth, 50));
+
+        this.timerAction = e -> {
+            if (clip != null && clip.isOpen() && clip.isRunning()) {
+                long currentPosition = clip.getMicrosecondPosition();
+                long totalLength = clip.getMicrosecondLength();
+                double progress = (double) currentPosition / totalLength;
+                progressBar.setValue((int) (progress * 100));
+            }
+        };
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setResizable(false);
+        this.setLayout(null);
+    }
+
+    public void initializePanels() {
         if (this.activeUser != null) {
             this.setTitle(this.activeUser.getName());
             this.usernameLabel.setText("Username: " + this.activeUser.getName());
@@ -316,7 +356,9 @@ public class AppFrame extends JFrame implements ActionListener {
 
         panel.add(playlistScrollPane);
         panel.add(playlistButtonPanel, BorderLayout.SOUTH);
-        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width - panel.getPreferredSize().width - 40, searchPanel.getPreferredSize().height, panel.getPreferredSize().width, Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 4);
+        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width - panel.getPreferredSize().width - 40,
+                searchPanel.getPreferredSize().height + 60, panel.getPreferredSize().width,
+                Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 4);
         return panel;
     }
 
@@ -446,13 +488,19 @@ public class AppFrame extends JFrame implements ActionListener {
                             if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
                                 AppFrame.this.clip.stop();
                                 AppFrame.this.clip.close();
+                                AppFrame.this.remove(AppFrame.this.fileViewer);
                             }
                             File recordingFile = new File(recordingPath);
                             AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
                             AppFrame.this.clip = AudioSystem.getClip();
                             AppFrame.this.clip.open(audioStream);
                             AppFrame.this.clip.start();
-    
+                            String textPath = song.getLyricsPath();
+                            AppFrame.this.fileViewer = new FileViewerPanel(textPath);
+                            AppFrame.this.fileViewer.setBounds(50, 135, 500, 830); // Set the position and size of the
+                                                                                   // panel
+                            AppFrame.this.add(AppFrame.this.fileViewer);
+                            System.out.println(textPath);
                             Timer timer = new Timer(100, timerAction);
                             timer.start();
                         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
@@ -531,8 +579,15 @@ public class AppFrame extends JFrame implements ActionListener {
             handleSearch();
         } else if (source == addButton) {
             handleAddSong();
-        } else if (source == colorButton) {
-            handleChangeColor();
+        } else if (source == colorButton)
+
+        {
+            this.searchQuery = this.searchField.getText();
+            String selectedColor = showColorDialog(this);
+            if (!selectedColor.equals("")) {
+                this.activeUser.setpreferedColor(selectedColor);
+                initialize();
+            }
         }
     }
 
@@ -584,14 +639,10 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private void handleAddSong() {
-        String songName = JOptionPane.showInputDialog("Enter playlist name:");
-        String songAutor = JOptionPane.showInputDialog("Enter playlist author:");
-
-    }
-
-    private void handleChangeColor() {
-        String songName = JOptionPane.showInputDialog("Enter playlist name:");
-        String songAutor = JOptionPane.showInputDialog("Enter playlist author:");
+        String songName = JOptionPane.showInputDialog("Enter song name:");
+        String songAutor = JOptionPane.showInputDialog("Enter song author:");
+        songImporter.ImportSong(songName, songAutor);
+        drawCustom();
 
     }
 

@@ -23,7 +23,9 @@ public class Song {
             DatabaseConnection DC = new DatabaseConnection();
             connection = DC.MakeConnection();
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM (SONG s join SONG_DATA sd on(sd.song_data_id = s.DATA_ID)) join AUTHOR_SONGS aus using(SONG_ID) WHERE song_id = " + this.id);
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT * FROM (SONG s join SONG_DATA sd on(sd.song_data_id = s.DATA_ID)) join AUTHOR_SONGS aus using(SONG_ID) WHERE song_id = "
+                            + this.id);
             while (rs.next()) {
                 this.name = rs.getString("name");
                 this.length = rs.getInt("length");
@@ -35,7 +37,7 @@ public class Song {
                 this.recordingPath = rs.getString("music");
             }
             ResultSet rs2 = stmt.executeQuery("SELECT name FROM author WHERE author_id = " + this.author_id);
-            while (rs2.next()){
+            while (rs2.next()) {
                 this.author_name = rs2.getString("name");
             }
             stmt.close();

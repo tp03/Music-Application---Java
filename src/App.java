@@ -31,7 +31,7 @@ public class App {
         // su.deletePlaylist(pl);
         Login_or_Register LoginLogic = new Login_or_Register(login, appFrame,
                 login.loginbutton, login.registerbutton);
-        
+
     }
 
 }

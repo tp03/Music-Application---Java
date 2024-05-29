@@ -71,8 +71,7 @@ public class Spotify_user {
         return this.email;
     }
 
-    public ArrayList<Playlist> getPlaylists()
-    {
+    public ArrayList<Playlist> getPlaylists() {
         downloadUserPlaylistsFromServer();
         return this.user_playlists;
     }
@@ -85,7 +84,7 @@ public class Spotify_user {
         try {
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
-            String in_query = "SELECT MAX(playlist_id) FROM playlist";          
+            String in_query = "SELECT MAX(playlist_id) FROM playlist";
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(in_query);
             while (resultSet.next()) {
@@ -95,7 +94,7 @@ public class Spotify_user {
             String insert_query = "INSERT INTO PLAYLIST VALUES (" + new_id + ", '" + playlist_name + "')";
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
             prepstat.executeQuery();
-            String query = "SELECT MAX(user_playlist_id) FROM user_playlist";          
+            String query = "SELECT MAX(user_playlist_id) FROM user_playlist";
             ResultSet rs = stmt.executeQuery(query);
             int new_up_id = 0;
             while (rs.next()) {
@@ -108,10 +107,10 @@ public class Spotify_user {
             stmt.close();            
         } catch (SQLException e) {
             e.printStackTrace();
-        }    
+        }
         Playlist playlist = new Playlist(new_id);
         return playlist;
-    
+
     }
 
     ArrayList<Playlist> downloadUserPlaylistsFromServer()
