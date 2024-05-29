@@ -52,6 +52,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private ImageIcon backgroundIcon;
     private JLabel titleLabel;
     private String searchQuery = "";
+    public FileViewerPanel fileViewer;
 
     AppFrame() {
         initializeIcons();
@@ -496,6 +497,11 @@ public class AppFrame extends JFrame implements ActionListener {
                             AppFrame.this.clip = AudioSystem.getClip();
                             AppFrame.this.clip.open(audioStream);
                             AppFrame.this.clip.start();
+                            String textPath = song.getLyricsPath();
+                            AppFrame.this.fileViewer = new FileViewerPanel(textPath);
+                            AppFrame.this.fileViewer.setBounds(50, 50, 500, 300); // Set the position and size of the
+                                                                                  // panel
+                            AppFrame.this.add(AppFrame.this.fileViewer);
 
                             Timer timer = new Timer(100, timerAction);
                             timer.start();
