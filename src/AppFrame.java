@@ -28,7 +28,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JScrollPane scrollPane;
     private JTextField searchField;
     private JPanel searchPanel;
-    private SongImport songImporter = new SongImport("recordings", "assets");
+    private SongImport songImporter = new SongImport("lyrics", "recordings", "assets");
 
     private JPanel playlistPanel;
     private DefaultListModel<Playlist> playlistModel = new DefaultListModel<>();
