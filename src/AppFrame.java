@@ -359,7 +359,7 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.add(playlistScrollPane, BorderLayout.CENTER);
         panel.add(playlistButtonPanel, BorderLayout.SOUTH);
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width - panel.getPreferredSize().width - 40,
-                searchPanel.getPreferredSize().height, panel.getPreferredSize().width,
+                searchPanel.getPreferredSize().height + 60, panel.getPreferredSize().width,
                 Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 4);
         return panel;
     }
@@ -491,6 +491,7 @@ public class AppFrame extends JFrame implements ActionListener {
                             if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
                                 AppFrame.this.clip.stop();
                                 AppFrame.this.clip.close();
+                                AppFrame.this.remove(AppFrame.this.fileViewer);
                             }
                             File recordingFile = new File(recordingPath);
                             AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
@@ -499,10 +500,10 @@ public class AppFrame extends JFrame implements ActionListener {
                             AppFrame.this.clip.start();
                             String textPath = song.getLyricsPath();
                             AppFrame.this.fileViewer = new FileViewerPanel(textPath);
-                            AppFrame.this.fileViewer.setBounds(50, 50, 500, 300); // Set the position and size of the
-                                                                                  // panel
+                            AppFrame.this.fileViewer.setBounds(50, 135, 500, 830); // Set the position and size of the
+                                                                                   // panel
                             AppFrame.this.add(AppFrame.this.fileViewer);
-
+                            System.out.println(textPath);
                             Timer timer = new Timer(100, timerAction);
                             timer.start();
                         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
