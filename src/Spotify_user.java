@@ -74,28 +74,36 @@ public class Spotify_user {
         return this.email;
     }
 
-    void createPlaylist(String playlist_name) {
+    public ArrayList<Playlist> getPlaylists()
+    {
+        downloadUserPlaylistsFromServer();
+        return this.user_playlists;
+    }
+
+    Playlist createPlaylist(String playlist_name)
+
+    {
         Connection connection = null;
+        int new_id = 0;
         try {
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
-            String in_query = "SELECT COUNT(*) FROM playlist";
+            String in_query = "SELECT MAX(playlist_id) FROM playlist";          
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(in_query);
-            int new_id = 0;
             while (resultSet.next()) {
 
-                new_id = resultSet.getInt("COUNT(*)") + 1;
+                new_id = resultSet.getInt("MAX(playlist_id)") + 1;
             }
             String insert_query = "INSERT INTO PLAYLIST VALUES (" + new_id + ", '" + playlist_name + "')";
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
             prepstat.executeQuery();
-            String query = "SELECT COUNT(*) FROM user_playlist";
+            String query = "SELECT MAX(user_playlist_id) FROM user_playlist";          
             ResultSet rs = stmt.executeQuery(query);
             int new_up_id = 0;
             while (rs.next()) {
 
-                new_up_id = rs.getInt("COUNT(*)") + 1;
+                new_up_id = rs.getInt("MAX(user_playlist_id)") + 1;
             }
             String insert_query2 = "INSERT INTO USER_PLAYLIST VALUES (" + new_up_id + ", " + this.id + ", " + new_id
                     + ")";
@@ -104,7 +112,10 @@ public class Spotify_user {
             stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }    
+        Playlist playlist = new Playlist(new_id);
+        return playlist;
+    
     }
 
     ArrayList<Playlist> downloadUserPlaylistsFromServer() {

@@ -57,6 +57,8 @@ public class Login_or_Register {
             try {
                 this.logged_user = user_reader.searchDB();
                 loginFrame.dispose();
+                this.appFrame.setActiveUser(loggedUser());
+                appFrame.initialize();
                 appFrame.setVisible(true);
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.drawCustom();
@@ -76,6 +78,8 @@ public class Login_or_Register {
             try {
                 this.logged_user = user_reader.searchDB();
                 loginFrame.dispose();
+                this.appFrame.setActiveUser(loggedUser());
+                appFrame.initialize();
                 appFrame.setVisible(true);
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.drawCustom();
