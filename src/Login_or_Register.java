@@ -54,15 +54,15 @@ public class Login_or_Register {
             user_creator.created_user(data.get("name"), data.get("surname"), data.get("nickname"), data.get("email"),
                     data.get("password"));
             UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
-            try{
+            try {
                 this.logged_user = user_reader.searchDB();
                 loginFrame.dispose();
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.initialize();
                 appFrame.setVisible(true);
-            }
-            catch (Exception e)
-            {
+                this.appFrame.setActiveUser(loggedUser());
+                appFrame.drawCustom();
+            } catch (Exception e) {
                 System.out.println("Bad");
             }
         }
@@ -75,15 +75,15 @@ public class Login_or_Register {
             loginFrame.highlight_unfilled_login(check_result);
         } else {
             UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
-            try{
+            try {
                 this.logged_user = user_reader.searchDB();
                 loginFrame.dispose();
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.initialize();
                 appFrame.setVisible(true);
-            }
-            catch (Exception e)
-            {
+                this.appFrame.setActiveUser(loggedUser());
+                appFrame.drawCustom();
+            } catch (Exception e) {
                 System.out.println("Bad");
             }
         }

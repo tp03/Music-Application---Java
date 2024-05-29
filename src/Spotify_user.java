@@ -13,6 +13,7 @@ public class Spotify_user {
     private String password;
     private String email;
     private ArrayList<Playlist> user_playlists = new ArrayList<>();
+    private String preferedColor = "orange_background.jpeg";
 
     public Spotify_user(int id) {
         this.id = id;
@@ -41,33 +42,35 @@ public class Spotify_user {
         }
     }
 
-    int getId()
-    {
+    void setpreferedColor(String new_color) {
+        this.preferedColor = new_color;
+    }
+
+    String getpreferedColor() {
+        return this.preferedColor;
+    }
+
+    int getId() {
         return this.id;
     }
 
-    String getName()
-    {
+    String getName() {
         return this.name;
     }
 
-    String getLastName()
-    {
+    String getLastName() {
         return this.last_name;
     }
 
-    String getLogin()
-    {
+    String getLogin() {
         return this.login;
     }
 
-    String getPassword()
-    {
+    String getPassword() {
         return this.password;
     }
 
-    String getEmail()
-    {
+    String getEmail() {
         return this.email;
     }
 
@@ -101,10 +104,11 @@ public class Spotify_user {
 
                 new_up_id = rs.getInt("MAX(user_playlist_id)") + 1;
             }
-            String insert_query2 = "INSERT INTO USER_PLAYLIST VALUES (" + new_up_id + ", " + this.id + ", " + new_id + ")";
+            String insert_query2 = "INSERT INTO USER_PLAYLIST VALUES (" + new_up_id + ", " + this.id + ", " + new_id
+                    + ")";
             PreparedStatement ps = connection.prepareStatement(insert_query2);
             ps.executeQuery();
-            stmt.close();            
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -113,8 +117,7 @@ public class Spotify_user {
 
     }
 
-    ArrayList<Playlist> downloadUserPlaylistsFromServer()
-    {
+    ArrayList<Playlist> downloadUserPlaylistsFromServer() {
         Connection connection = null;
         try {
             DatabaseConnection DC = new DatabaseConnection();
@@ -130,7 +133,7 @@ public class Spotify_user {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return this.user_playlists;       
+        return this.user_playlists;
     }
 
     void addSongtoPlaylist(Song song, Playlist playlist) {
@@ -139,6 +142,10 @@ public class Spotify_user {
 
     void removeSongFromPlaylist(Song song, Playlist playlist) {
         playlist.removeSong(song);
+    }
+
+    void shufflePlaylist(Playlist playlist) {
+        playlist.Shuffle();
     }
 
     void deletePlaylist(Playlist playlist) {
