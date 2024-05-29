@@ -58,6 +58,7 @@ public class Login_or_Register {
                 this.logged_user = user_reader.searchDB();
                 loginFrame.dispose();
                 this.appFrame.setActiveUser(loggedUser());
+                appFrame.initialize();
                 appFrame.setVisible(true);
             }
             catch (Exception e)

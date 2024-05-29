@@ -115,7 +115,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.titleLabel.setFont(new Font("Monospaced", Font.PLAIN, 20));
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.backgroundIcon = createScaledIcon("assets/images.jpeg", screenSize.width, screenSize.height);
+        this.backgroundIcon = createScaledIcon("assets/orange_background.jpeg", screenSize.width, screenSize.height);
         this.backgroundLabel = new JLabel(this.backgroundIcon);
         this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
         this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
