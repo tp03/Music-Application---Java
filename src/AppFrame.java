@@ -253,7 +253,7 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.setOpaque(false);
         panel.add(searchField, BorderLayout.CENTER);
         panel.add(searchButton, BorderLayout.EAST);
-        panel.add(colorButton, BorderLayout.EAST);
+        panel.add(addButton, BorderLayout.EAST);
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - panel.getPreferredSize().width / 2, 0,
                 panel.getPreferredSize().width, panel.getPreferredSize().height);
         return panel;
