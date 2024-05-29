@@ -255,9 +255,14 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createPlaylistPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout()){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                
+            }
+        };
         panel.setOpaque(false);
-        panel.setBackground(new Color(0, 0, 0, 0)); 
         panel.setBorder(BorderFactory.createTitledBorder("Playlists"));
 
         ArrayList<Playlist> playlists = null;
@@ -272,8 +277,10 @@ public class AppFrame extends JFrame implements ActionListener {
         this.playlistList.setCellRenderer(new PlaylistCellRenderer());
 
         JScrollPane playlistScrollPane = new JScrollPane(playlistList);
-        playlistScrollPane.setOpaque(false);
-        playlistScrollPane.getViewport().setOpaque(false);
+        playlistScrollPane.setOpaque(true);
+        playlistScrollPane.setBackground(panelColor);
+        playlistScrollPane.getViewport().setOpaque(true); 
+        playlistScrollPane.getViewport().setBackground(panelColor);
 
         JPanel playlistButtonPanel = new JPanel();
         playlistButtonPanel.setOpaque(false);
@@ -423,7 +430,6 @@ public class AppFrame extends JFrame implements ActionListener {
                         addToPlaylist(song);
                         playlistPanel.revalidate();
                         playlistPanel.repaint();
-                        // drawCustom();
                     });
                     popupMenu.add(addToPlaylistItem);
                     popupMenu.show(songPanel, e.getX(), e.getY());
@@ -617,17 +623,11 @@ public class AppFrame extends JFrame implements ActionListener {
 
     
     private class PlaylistCellRenderer extends DefaultListCellRenderer {
-        private JLabel nameLabel;
 
         public PlaylistCellRenderer() {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-            setForeground(Color.WHITE);
-            setBackground(Color.ORANGE);
-            setFont(new Font("Arial", Font.BOLD, 30));
-            setOpaque(true);
             setPreferredSize(new Dimension(200, 60));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         }
 
         @Override
@@ -636,11 +636,15 @@ public class AppFrame extends JFrame implements ActionListener {
             if (value instanceof Playlist) {
                 Playlist playlist = (Playlist) value;
                 setText(playlist.getName());
+                setFont(new Font("Arial", Font.BOLD, 24));
+                setBackground(panelColor);
+                setForeground(Color.WHITE);
+                setHorizontalAlignment(SwingConstants.LEFT);
             }
             if (isSelected) {
                 setBackground(Color.LIGHT_GRAY);
             } else {
-                setBackground(Color.ORANGE);
+                setBackground(panelColor);
             }
             return this;
         }
