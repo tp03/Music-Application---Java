@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.sql.PreparedStatement;
 
 public class Spotify_user {
@@ -11,6 +12,7 @@ public class Spotify_user {
     private String login;
     private String password;
     private String email;
+    private ArrayList<Playlist> user_playlists = new ArrayList<>();
 
     public Spotify_user(int id) {
         this.id = id;
@@ -83,9 +85,9 @@ public class Spotify_user {
 
                 new_id = resultSet.getInt("COUNT(*)") + 1;
             }
-            System.out.println(new_id);
             String insert_query = "INSERT INTO PLAYLIST VALUES (" + new_id + ", '" + playlist_name + "')";
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
+            prepstat.executeQuery();
             String query = "SELECT COUNT(*) FROM user_playlist";          
             ResultSet rs = stmt.executeQuery(query);
             int new_up_id = 0;
@@ -95,9 +97,65 @@ public class Spotify_user {
             }
             String insert_query2 = "INSERT INTO USER_PLAYLIST VALUES (" + new_up_id + ", " + this.id + ", " + new_id + ")";
             PreparedStatement ps = connection.prepareStatement(insert_query2);
+            ps.executeQuery();
             stmt.close();            
         } catch (SQLException e) {
             e.printStackTrace();
         }        
+    }
+
+    ArrayList<Playlist> downloadUserPlaylistsFromServer()
+    {
+        Connection connection = null;
+        try {
+            DatabaseConnection DC = new DatabaseConnection();
+            connection = DC.MakeConnection();
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM user_playlist WHERE user_id = " + this.id);
+            while (rs.next()) {
+                int p_id = rs.getInt("playlist_id");
+                Playlist new_playlist = new Playlist(p_id);
+                this.user_playlists.add(new_playlist);
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return this.user_playlists;       
+    }
+
+    void addSongtoPlaylist(Song song, Playlist playlist) {
+        playlist.addSong(song);
+    }
+
+    void removeSongFromPlaylist(Song song, Playlist playlist) {
+        playlist.removeSong(song);
+    }
+
+    void shufflePlaylist(Playlist playlist) {
+        playlist.Shuffle();
+    }
+
+    void deletePlaylist(Playlist playlist) {
+        this.user_playlists.remove(playlist);
+        int playlist_id = playlist.getId();
+        Connection connection = null;
+        try {
+            DatabaseConnection DC = new DatabaseConnection();
+            connection = DC.MakeConnection();
+            String delete_query1 = "DELETE FROM song_and_playlist WHERE playlist_id = " + playlist_id;
+            PreparedStatement ptmt = connection.prepareStatement(delete_query1);
+            ptmt.executeQuery();
+            String delete_query2 = "DELETE FROM user_playlist WHERE playlist_id = " + playlist_id;
+            PreparedStatement ptmt2 = connection.prepareStatement(delete_query2);
+            ptmt2.executeQuery();
+            String delete_query3 = "DELETE FROM playlist WHERE playlist_id = " + playlist_id;
+            PreparedStatement ptmt3 = connection.prepareStatement(delete_query3);
+            ptmt3.executeQuery();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
