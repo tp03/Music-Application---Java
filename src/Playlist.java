@@ -2,7 +2,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -111,9 +110,6 @@ public class Playlist {
         }
     }
 
-    public void Shuffle() {
-        Collections.shuffle(this.songs);        
-    }
     // należy stworzyć gettery
 
     private String formatSong(Song song) {
