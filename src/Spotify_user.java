@@ -13,7 +13,7 @@ public class Spotify_user {
     private String password;
     private String email;
     private ArrayList<Playlist> user_playlists = new ArrayList<>();
-    private String preferedColor;
+    private String preferedColor = "orange_background.jpeg";
 
     public Spotify_user(int id) {
         this.id = id;

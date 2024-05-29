@@ -110,7 +110,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.getContentPane().remove(backgroundLabel);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.backgroundIcon = createScaledIcon("assets/" +
-                this.activeUser.getpreferedColor() + ".jpeg",
+                this.activeUser.getpreferedColor(),
                 screenSize.width, screenSize.height);
         this.backgroundLabel = new JLabel(this.backgroundIcon);
         this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
@@ -124,7 +124,8 @@ public class AppFrame extends JFrame implements ActionListener {
         this.titleLabel.setFont(new Font("Monospaced", Font.PLAIN, 20));
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.backgroundIcon = createScaledIcon("assets/images.jpeg", screenSize.width, screenSize.height);
+        this.backgroundIcon = createScaledIcon("assets/" + this.activeUser.getpreferedColor(), screenSize.width,
+                screenSize.height);
         this.backgroundLabel = new JLabel(this.backgroundIcon);
         this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
         this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
@@ -491,6 +492,7 @@ public class AppFrame extends JFrame implements ActionListener {
             String selectedColor = showColorDialog(this);
             if (!selectedColor.equals("")) {
                 this.activeUser.setpreferedColor(selectedColor);
+                setBackground();
             }
         }
     }
@@ -498,7 +500,8 @@ public class AppFrame extends JFrame implements ActionListener {
     private static String showColorDialog(Component parent) {
         // Definicja dostępnych kolorów
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE };
-        String[] colorNames = { "Red", "Green", "Blue", "Yellow", "Orange" };
+        String[] colorNames = { "Blue", "Green", "Orange" };
+        String[] colorFiles = { "blue_background.jpg", "green_background.jpg", "orange_background.jpeg" };
 
         // Tworzenie okna dialogowego
         JDialog dialog = new JDialog((Frame) null, "Choose a Color", true);
@@ -514,7 +517,7 @@ public class AppFrame extends JFrame implements ActionListener {
             colorButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    selectedColor[0] = colorNames[ind];
+                    selectedColor[0] = colorFiles[ind];
                     dialog.dispose();
                 }
             });
