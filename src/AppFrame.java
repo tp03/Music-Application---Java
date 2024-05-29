@@ -48,10 +48,8 @@ public class AppFrame extends JFrame implements ActionListener {
     private ImageIcon searchIcon;
     private ImageIcon backgroundIcon;
     private JLabel titleLabel;
-    private Font font;
 
     AppFrame() {
-        initializeFont();
         initializeIcons();
         initializeColors();
         initializeButtons();
@@ -65,15 +63,6 @@ public class AppFrame extends JFrame implements ActionListener {
         initializeButtons();
         initializeFrame();
         initializePanels();
-    }
-
-    private void initializeFont() {
-        try {
-            File fontFile = new File("assets/BebasNeue-Regular.ttf");
-            this.font = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(24f);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void initializeIcons() {
@@ -108,8 +97,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.searchButton = createButton(searchIcon, 80, 50, Color.BLACK);
         this.addButton = createButton(addIcon, 80, 50, Color.BLACK);
 
-        Font sizedFont = this.font.deriveFont(18f);
-        searchButton.setFont(sizedFont);
+        this.searchButton.setFont(new Font("Arial", Font.BOLD, 18));
         this.searchButton.setForeground(Color.WHITE);
     }
 
@@ -198,8 +186,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JTextField createSearchField() {
         JTextField textField = new JTextField();
         textField.setPreferredSize(new Dimension(400, 50));
-        Font sizedFont = this.font.deriveFont(18f);
-        textField.setFont(sizedFont);
+        textField.setFont(new Font("Arial", Font.PLAIN, 18));
         textField.setForeground(Color.WHITE);
         textField.setBackground(Color.BLACK);
         return textField;
@@ -356,8 +343,7 @@ public class AppFrame extends JFrame implements ActionListener {
         button.addActionListener(listener);
         button.setBackground(Color.BLACK);
         button.setForeground(Color.WHITE);
-        Font sizedFont = this.font.deriveFont(16f);
-        button.setFont(sizedFont);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
         return button;
     }
 
@@ -373,8 +359,7 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.setBorder(BorderFactory.createTitledBorder("User"));
         this.usernameLabel = new JLabel("Username: " + (activeUser != null ? activeUser.getName() : "Guest"));
         this.usernameLabel.setForeground(Color.WHITE);
-        Font sizedFont = this.font.deriveFont(18f);
-        this.usernameLabel.setFont(sizedFont);
+        this.usernameLabel.setFont(new Font("Arial", Font.BOLD, 18));
         this.usernameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -406,10 +391,9 @@ public class AppFrame extends JFrame implements ActionListener {
         songPanel.setBorder(border);
         songPanel.setBackground(Color.BLACK);
 
-        Font sizedFont = this.font.deriveFont(22f);
         // Song Label
         JLabel nameLabel = new JLabel(song.getName());
-        nameLabel.setFont(sizedFont); // Set font size
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 22)); // Set font size
         nameLabel.setForeground(Color.WHITE);
         songPanel.add(nameLabel, BorderLayout.WEST);
 
@@ -418,7 +402,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
         // Author Label
         JLabel authorLabel = new JLabel(" - " + song.getAuthor());
-        authorLabel.setFont(sizedFont); // Set font size
+        authorLabel.setFont(new Font("Arial", Font.PLAIN, 22)); // Set font size
         authorLabel.setForeground(Color.WHITE);
         songPanel.add(authorLabel);
 
