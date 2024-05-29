@@ -13,6 +13,7 @@ public class Spotify_user {
     private String password;
     private String email;
     private ArrayList<Playlist> user_playlists = new ArrayList<>();
+    private String preferedColor;
 
     public Spotify_user(int id) {
         this.id = id;
@@ -41,43 +42,44 @@ public class Spotify_user {
         }
     }
 
-    int getId()
-    {
+    void setpreferedColor(String new_color) {
+        this.preferedColor = new_color;
+    }
+
+    String getpreferedColor() {
+        return this.preferedColor;
+    }
+
+    int getId() {
         return this.id;
     }
 
-    String getName()
-    {
+    String getName() {
         return this.name;
     }
 
-    String getLastName()
-    {
+    String getLastName() {
         return this.last_name;
     }
 
-    String getLogin()
-    {
+    String getLogin() {
         return this.login;
     }
 
-    String getPassword()
-    {
+    String getPassword() {
         return this.password;
     }
 
-    String getEmail()
-    {
+    String getEmail() {
         return this.email;
     }
 
-    void createPlaylist(String playlist_name)
-    {
+    void createPlaylist(String playlist_name) {
         Connection connection = null;
         try {
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
-            String in_query = "SELECT COUNT(*) FROM playlist";          
+            String in_query = "SELECT COUNT(*) FROM playlist";
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(in_query);
             int new_id = 0;
@@ -88,24 +90,24 @@ public class Spotify_user {
             String insert_query = "INSERT INTO PLAYLIST VALUES (" + new_id + ", '" + playlist_name + "')";
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
             prepstat.executeQuery();
-            String query = "SELECT COUNT(*) FROM user_playlist";          
+            String query = "SELECT COUNT(*) FROM user_playlist";
             ResultSet rs = stmt.executeQuery(query);
             int new_up_id = 0;
             while (rs.next()) {
 
                 new_up_id = rs.getInt("COUNT(*)") + 1;
             }
-            String insert_query2 = "INSERT INTO USER_PLAYLIST VALUES (" + new_up_id + ", " + this.id + ", " + new_id + ")";
+            String insert_query2 = "INSERT INTO USER_PLAYLIST VALUES (" + new_up_id + ", " + this.id + ", " + new_id
+                    + ")";
             PreparedStatement ps = connection.prepareStatement(insert_query2);
             ps.executeQuery();
-            stmt.close();            
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }        
+        }
     }
 
-    ArrayList<Playlist> downloadUserPlaylistsFromServer()
-    {
+    ArrayList<Playlist> downloadUserPlaylistsFromServer() {
         Connection connection = null;
         try {
             DatabaseConnection DC = new DatabaseConnection();
@@ -121,7 +123,7 @@ public class Spotify_user {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return this.user_playlists;       
+        return this.user_playlists;
     }
 
     void addSongtoPlaylist(Song song, Playlist playlist) {

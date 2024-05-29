@@ -40,6 +40,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JButton pauseButton;
     private JButton returnButton;
     private JButton searchButton;
+    private JButton colorButton;
     private JButton addButton;
     private ImageIcon imageIcon;
     private ImageIcon returnIcon;
@@ -91,6 +92,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.returnButton = createButton(returnIcon, buttonWidth, buttonWidth, Color.BLACK);
         this.searchButton = createButton(searchIcon, 80, 50, Color.BLACK);
         this.addButton = createButton(addIcon, 80, 50, Color.BLACK);
+        this.colorButton = createButton(addIcon, 80, 50, Color.BLACK);
 
         this.searchButton.setFont(new Font("Arial", Font.BOLD, 18));
         this.searchButton.setForeground(Color.WHITE);
@@ -102,6 +104,18 @@ public class AppFrame extends JFrame implements ActionListener {
         button.setBackground(bgColor);
         button.addActionListener(this);
         return button;
+    }
+
+    private void setBackground() {
+        this.getContentPane().remove(backgroundLabel);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.backgroundIcon = createScaledIcon("assets/" +
+                this.activeUser.getpreferedColor() + ".jpeg",
+                screenSize.width, screenSize.height);
+        this.backgroundLabel = new JLabel(this.backgroundIcon);
+        this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
+        this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
+        this.setContentPane(backgroundLabel);
     }
 
     private void initializeFrame() {
@@ -361,7 +375,8 @@ public class AppFrame extends JFrame implements ActionListener {
         });
 
         panel.add(usernameLabel);
-        panel.add(addButton, BorderLayout.EAST);
+        panel.add(colorButton, BorderLayout.EAST);
+        // panel.add(addButton, BorderLayout.EAST);
         Dimension prefSize = panel.getPreferredSize();
         panel.setBounds(this.titleLabel.getPreferredSize().width + 10, 20, prefSize.width, prefSize.height);
         return panel;
@@ -469,10 +484,48 @@ public class AppFrame extends JFrame implements ActionListener {
             handleSearch();
         } else if (source == addButton) {
             handleAddSong();
-        } else if (source == searchButton) {
-            this.searchQuery = this.searchField.getText();
+        } else if (source == colorButton)
 
+        {
+            this.searchQuery = this.searchField.getText();
+            String selectedColor = showColorDialog(this);
+            if (!selectedColor.equals("")) {
+                this.activeUser.setpreferedColor(selectedColor);
+            }
         }
+    }
+
+    private static String showColorDialog(Component parent) {
+        // Definicja dostępnych kolorów
+        Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE };
+        String[] colorNames = { "Red", "Green", "Blue", "Yellow", "Orange" };
+
+        // Tworzenie okna dialogowego
+        JDialog dialog = new JDialog((Frame) null, "Choose a Color", true);
+        dialog.setLayout(new GridLayout(0, 1));
+        dialog.setSize(200, 300);
+
+        // Tworzenie przycisków dla każdego koloru
+        final String[] selectedColor = { "" };
+        for (int i = 0; i < colors.length; i++) {
+            JButton colorButton = new JButton(colorNames[i]);
+            colorButton.setBackground(colors[i]);
+            final int ind = i;
+            colorButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    selectedColor[0] = colorNames[ind];
+                    dialog.dispose();
+                }
+            });
+            dialog.add(colorButton);
+        }
+
+        // Wyświetlanie dialogu
+        dialog.setLocationRelativeTo(parent);
+        dialog.setVisible(true);
+
+        return selectedColor[0];
     }
 
     private void handleSkip() {
