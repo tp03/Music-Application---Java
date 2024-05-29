@@ -623,18 +623,27 @@ public class AppFrame extends JFrame implements ActionListener {
 
     
     private class PlaylistCellRenderer extends DefaultListCellRenderer {
+        private Playlist playlist;
 
         public PlaylistCellRenderer() {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
             setPreferredSize(new Dimension(200, 60));
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (playlist != null) {
+                        playSongs(playlist);
+                    }
+                }
+            });
         }
 
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof Playlist) {
-                Playlist playlist = (Playlist) value;
+                this.playlist = (Playlist) value;
                 setText(playlist.getName());
                 setFont(new Font("Arial", Font.BOLD, 24));
                 setBackground(panelColor);
@@ -647,6 +656,37 @@ public class AppFrame extends JFrame implements ActionListener {
                 setBackground(panelColor);
             }
             return this;
+        }
+
+        private void playSongs(Playlist playlist) {
+            ArrayList<Song> songs = playlist.getSongs();
+            if (songs != null && !songs.isEmpty()) {
+                for (Song song : songs) {
+                    playSong(song);
+                }
+            }
+        }
+
+        private void playSong(Song song) {
+            String recordingPath = song.getRecordingPath();
+            if (recordingPath != null && !recordingPath.isEmpty()) {
+                try {
+                    if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
+                        AppFrame.this.clip.stop();
+                        AppFrame.this.clip.close();
+                    }
+                    File recordingFile = new File(recordingPath);
+                    AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
+                    AppFrame.this.clip = AudioSystem.getClip();
+                    AppFrame.this.clip.open(audioStream);
+                    AppFrame.this.clip.start();
+    
+                    Timer timer = new Timer(100, timerAction);
+                    timer.start();
+                } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 
