@@ -23,7 +23,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private Clip clip;
     private JProgressBar progressBar;
     private ActionListener timerAction;
-    private Spotify_user activeUser;
+    private Spotify_user activeUser = null;
     private JPanel songListPanel;
     private JScrollPane scrollPane;
     private JTextField searchField;
@@ -40,14 +40,15 @@ public class AppFrame extends JFrame implements ActionListener {
     private JButton pauseButton;
     private JButton returnButton;
     private JButton searchButton;
-    private JButton colorButton;
     private JButton addButton;
+    private JButton colorButton;
     private ImageIcon imageIcon;
     private ImageIcon returnIcon;
     private ImageIcon skipIcon;
     private ImageIcon pauseIcon;
     private ImageIcon playIcon;
     private ImageIcon addIcon;
+    private ImageIcon colorIcon;
     private ImageIcon searchIcon;
     private ImageIcon backgroundIcon;
     private JLabel titleLabel;
@@ -62,7 +63,7 @@ public class AppFrame extends JFrame implements ActionListener {
         initializePanels();
     }
 
-    public void initialize() {
+    public void initialize(){
         initializeIcons();
         initializeColors();
         initializeButtons();
@@ -78,6 +79,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.playIcon = createScaledIcon("assets/play.png", 50, 50);
         this.searchIcon = createScaledIcon("assets/search.png", 30, 30);
         this.addIcon = createScaledIcon("assets/add.png", 30, 30);
+        this.colorIcon = createScaledIcon("assets/play.png", 50, 50);
     }
 
     private ImageIcon createScaledIcon(String path, int width, int height) {
@@ -101,7 +103,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.returnButton = createButton(returnIcon, buttonWidth, buttonWidth, Color.BLACK);
         this.searchButton = createButton(searchIcon, 80, 50, Color.BLACK);
         this.addButton = createButton(addIcon, 80, 50, Color.BLACK);
-        this.colorButton = createButton(addIcon, 80, 50, Color.BLACK);
+        this.colorButton = createButton(addIcon, 30, 30, Color.BLACK);
 
         this.searchButton.setFont(new Font("Arial", Font.BOLD, 18));
         this.searchButton.setForeground(Color.WHITE);
@@ -115,26 +117,13 @@ public class AppFrame extends JFrame implements ActionListener {
         return button;
     }
 
-    private void setBackground() {
-        this.getContentPane().remove(backgroundLabel);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.backgroundIcon = createScaledIcon("assets/" +
-                this.activeUser.getpreferedColor(),
-                screenSize.width, screenSize.height);
-        this.backgroundLabel = new JLabel(this.backgroundIcon);
-        this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
-        this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
-        this.setContentPane(backgroundLabel);
-    }
-
     private void initializeFrame() {
         this.titleLabel = new JLabel(imageIcon);
         this.titleLabel.setForeground(textColor);
         this.titleLabel.setFont(new Font("Monospaced", Font.PLAIN, 20));
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.backgroundIcon = createScaledIcon("assets/" + this.activeUser.getpreferedColor(), screenSize.width,
-                screenSize.height);
+        this.backgroundIcon = createScaledIcon("assets/orange_background.jpeg", screenSize.width, screenSize.height);
         this.backgroundLabel = new JLabel(this.backgroundIcon);
         this.backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
         this.getContentPane().add(backgroundLabel, BorderLayout.CENTER);
@@ -200,7 +189,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.searchPanel = createSearchPanel();
         this.playlistPanel = createPlaylistPanel();
         this.scrollPane = createScrollPane();
-
+        
         this.userPanel = createUserPanel();
 
         this.add(createControlPanel());
@@ -212,7 +201,7 @@ public class AppFrame extends JFrame implements ActionListener {
         this.add(createTopPanel(titleLabel));
     }
 
-    private JScrollPane createScrollPane() {
+    private JScrollPane createScrollPane(){
         this.songListPanel = new JPanel(new GridLayout(0, 1));
         songListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         songListPanel.setBackground(panelColor);
@@ -243,28 +232,28 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createSearchPanel() {
-        JPanel panel = new JPanel() {
+        JPanel panel = new JPanel(){
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-
+                
             }
         };
         panel.setOpaque(false);
         panel.add(searchField, BorderLayout.CENTER);
         panel.add(searchButton, BorderLayout.EAST);
         panel.add(addButton, BorderLayout.EAST);
-        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - panel.getPreferredSize().width / 2, 0,
-                panel.getPreferredSize().width, panel.getPreferredSize().height);
+        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - panel.getPreferredSize().width / 2, 0, panel.getPreferredSize().width, panel.getPreferredSize().height);
         return panel;
     }
 
     private JPanel createTopPanel(JLabel label) {
-        JPanel panel = new JPanel() {
+        JPanel panel = new JPanel()
+        {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-
+                
             }
         };
         panel.setOpaque(false);
@@ -275,11 +264,12 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createControlPanel() {
-        JPanel panel = new JPanel() {
+        JPanel panel = new JPanel()
+        {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-
+                
             }
         };
         panel.setOpaque(false);
@@ -288,32 +278,35 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.add(skipButton);
         Dimension prefSize = panel.getPreferredSize();
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - prefSize.width / 2,
-                Toolkit.getDefaultToolkit().getScreenSize().height - 2 * prefSize.height, prefSize.width,
-                prefSize.height);
+        Toolkit.getDefaultToolkit().getScreenSize().height - 2 * prefSize.height, prefSize.width, prefSize.height);
         return panel;
     }
 
     private JPanel createProgressBarPanel() {
-        JPanel panel = new JPanel() {
+        JPanel panel = new JPanel(){
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-
+                
             }
         };
         panel.setOpaque(false);
         panel.add(progressBar);
         Dimension prefSize = panel.getPreferredSize();
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - prefSize.width / 2,
-                Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 5,
-                prefSize.width, prefSize.height);
+            Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 5, prefSize.width, prefSize.height);
         return panel;
     }
 
     private JPanel createPlaylistPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout()){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                
+            }
+        };
         panel.setOpaque(false);
-        panel.setBackground(Color.ORANGE);
         panel.setBorder(BorderFactory.createTitledBorder("Playlists"));
 
         ArrayList<Playlist> playlists = null;
@@ -328,8 +321,13 @@ public class AppFrame extends JFrame implements ActionListener {
         this.playlistList.setCellRenderer(new PlaylistCellRenderer());
 
         JScrollPane playlistScrollPane = new JScrollPane(playlistList);
+        playlistScrollPane.setOpaque(true);
+        playlistScrollPane.setBackground(panelColor);
+        playlistScrollPane.getViewport().setOpaque(true); 
+        playlistScrollPane.getViewport().setBackground(panelColor);
 
         JPanel playlistButtonPanel = new JPanel();
+        playlistButtonPanel.setOpaque(false);
         playlistButtonPanel.add(createButton("Add Playlist", e -> {
             String playlistName = JOptionPane.showInputDialog("Enter playlist name:");
             if (playlistName != null && !playlistName.trim().isEmpty()) {
@@ -337,7 +335,7 @@ public class AppFrame extends JFrame implements ActionListener {
                 if (playlist != null) {
                     playlistModel.addElement(playlist);
                 }
-
+                
             }
         }));
         playlistButtonPanel.add(createButton("Remove Playlist", e -> {
@@ -356,7 +354,7 @@ public class AppFrame extends JFrame implements ActionListener {
             }
         }));
 
-        panel.add(playlistScrollPane, BorderLayout.CENTER);
+        panel.add(playlistScrollPane);
         panel.add(playlistButtonPanel, BorderLayout.SOUTH);
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width - panel.getPreferredSize().width - 40,
                 searchPanel.getPreferredSize().height + 60, panel.getPreferredSize().width,
@@ -367,28 +365,29 @@ public class AppFrame extends JFrame implements ActionListener {
     private void showPlaylistSongs(Playlist playlist) {
         JDialog dialog = new JDialog((Frame) null, "Playlist: " + playlist.getName(), true);
         dialog.setLayout(new BorderLayout());
-
+    
         DefaultListModel<Song> songModel = new DefaultListModel<>();
         JList<Song> songList = new JList<>(songModel);
         songList.setCellRenderer(new SongCellRenderer());
-
+    
         for (Song song : playlist.getSongs()) {
             songModel.addElement(song);
         }
-
+    
         JScrollPane songScrollPane = new JScrollPane(songList);
         dialog.add(songScrollPane, BorderLayout.CENTER);
-
+    
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(e -> dialog.dispose());
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(closeButton);
         dialog.add(buttonPanel, BorderLayout.SOUTH);
-
+    
         dialog.setSize(300, 400);
         dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
     }
+    
 
     private JButton createButton(String text, ActionListener listener) {
         JButton button = new JButton(text);
@@ -400,11 +399,11 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createUserPanel() {
-        JPanel panel = new JPanel() {
+        JPanel panel = new JPanel(){
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-
+                
             }
         };
         panel.setOpaque(false);
@@ -426,10 +425,9 @@ public class AppFrame extends JFrame implements ActionListener {
         });
 
         panel.add(usernameLabel);
-        panel.add(colorButton, BorderLayout.EAST);
-        // panel.add(addButton, BorderLayout.EAST);
+        panel.add(colorButton);
         Dimension prefSize = panel.getPreferredSize();
-        panel.setBounds(this.titleLabel.getPreferredSize().width + 10, 20, prefSize.width, prefSize.height);
+        panel.setBounds(this.titleLabel.getPreferredSize().width+10, 20, prefSize.width, prefSize.height);
         return panel;
     }
 
@@ -479,7 +477,6 @@ public class AppFrame extends JFrame implements ActionListener {
                         addToPlaylist(song);
                         playlistPanel.revalidate();
                         playlistPanel.repaint();
-                        // drawCustom();
                     });
                     popupMenu.add(addToPlaylistItem);
                     popupMenu.show(songPanel, e.getX(), e.getY());
@@ -519,29 +516,25 @@ public class AppFrame extends JFrame implements ActionListener {
 
     private void addToPlaylist(Song song) {
         ArrayList<Playlist> playlists = activeUser.getPlaylists();
-
+        
         JComboBox<Playlist> playlistComboBox = new JComboBox<>(playlists.toArray(new Playlist[0]));
         playlistComboBox.setRenderer(new DefaultListCellRenderer() {
             @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 if (value instanceof Playlist) {
                     Playlist playlist = (Playlist) value;
-                    return super.getListCellRendererComponent(list, playlist.getName(), index, isSelected,
-                            cellHasFocus);
+                    return super.getListCellRendererComponent(list, playlist.getName(), index, isSelected, cellHasFocus);
                 }
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
         });
-
-        int result = JOptionPane.showConfirmDialog(this, playlistComboBox, "Choose Playlist",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        
+        int result = JOptionPane.showConfirmDialog(this, playlistComboBox, "Choose Playlist", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             Playlist selectedPlaylist = (Playlist) playlistComboBox.getSelectedItem();
             if (selectedPlaylist != null) {
                 selectedPlaylist.addSong(song);
-                JOptionPane.showMessageDialog(this, "Song added to playlist: " + selectedPlaylist.getName(), "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Song added to playlist: " + selectedPlaylist.getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "No playlist selected!", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -598,40 +591,6 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
-    private static String showColorDialog(Component parent) {
-        // Definicja dostępnych kolorów
-        Color[] colors = { Color.BLUE, Color.GREEN, Color.ORANGE };
-        String[] colorNames = { "Blue", "Green", "Orange" };
-        String[] colorFiles = { "blue_background.jpg", "green_background.jpg", "orange_background.jpeg" };
-
-        // Tworzenie okna dialogowego
-        JDialog dialog = new JDialog((Frame) null, "Choose a Color", true);
-        dialog.setLayout(new GridLayout(0, 1));
-        dialog.setSize(200, 300);
-
-        // Tworzenie przycisków dla każdego koloru
-        final String[] selectedColor = { "" };
-        for (int i = 0; i < colors.length; i++) {
-            JButton colorButton = new JButton(colorNames[i]);
-            colorButton.setBackground(colors[i]);
-            final int ind = i;
-            colorButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    selectedColor[0] = colorFiles[ind];
-                    dialog.dispose();
-                }
-            });
-            dialog.add(colorButton);
-        }
-
-        // Wyświetlanie dialogu
-        dialog.setLocationRelativeTo(parent);
-        dialog.setVisible(true);
-
-        return selectedColor[0];
-    }
-
     private void handleSkip() {
         // Implement the logic to skip to the next song
         if (clip != null) {
@@ -676,11 +635,7 @@ public class AppFrame extends JFrame implements ActionListener {
             // Logic to search for songs based on searchText
             System.out.println("Search performed for: " + searchText);
             // Example: Clear the song list panel and add search results
-            this.searchQuery = searchText;
-            System.out.println(this.searchQuery);
-
         }
-        drawCustom();
     }
 
     private void handleAddSong() {
@@ -730,36 +685,78 @@ public class AppFrame extends JFrame implements ActionListener {
         this.scrollPane = scrollPane;
     }
 
+    
     private class PlaylistCellRenderer extends DefaultListCellRenderer {
-        private JLabel nameLabel;
+        private Playlist playlist;
 
         public PlaylistCellRenderer() {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-            setBackground(Color.ORANGE);
-
-            nameLabel = new JLabel();
-            nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
-            nameLabel.setForeground(Color.BLACK);
-            add(nameLabel, BorderLayout.CENTER);
+            setPreferredSize(new Dimension(200, 60));
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (playlist != null) {
+                        playSongs(playlist);
+                    }
+                }
+            });
         }
 
         @Override
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof Playlist) {
-                Playlist playlist = (Playlist) value;
+                this.playlist = (Playlist) value;
                 setText(playlist.getName());
+                setFont(new Font("Arial", Font.BOLD, 24));
+                setBackground(panelColor);
+                setForeground(Color.WHITE);
+                setHorizontalAlignment(SwingConstants.LEFT);
+            }
+            if (isSelected) {
+                setBackground(Color.LIGHT_GRAY);
+            } else {
+                setBackground(panelColor);
             }
             return this;
+        }
+
+        private void playSongs(Playlist playlist) {
+            ArrayList<Song> songs = playlist.getSongs();
+            if (songs != null && !songs.isEmpty()) {
+                for (Song song : songs) {
+                    playSong(song);
+                }
+            }
+        }
+
+        private void playSong(Song song) {
+            String recordingPath = song.getRecordingPath();
+            if (recordingPath != null && !recordingPath.isEmpty()) {
+                try {
+                    if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
+                        AppFrame.this.clip.stop();
+                        AppFrame.this.clip.close();
+                    }
+                    File recordingFile = new File(recordingPath);
+                    AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
+                    AppFrame.this.clip = AudioSystem.getClip();
+                    AppFrame.this.clip.open(audioStream);
+                    AppFrame.this.clip.start();
+    
+                    Timer timer = new Timer(100, timerAction);
+                    timer.start();
+                } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 
     private class SongCellRenderer extends DefaultListCellRenderer {
         @Override
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof Song) {
                 Song song = (Song) value;

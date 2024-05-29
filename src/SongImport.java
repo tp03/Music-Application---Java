@@ -36,7 +36,7 @@ public class SongImport {
         AddSongDatabase();
     }
 
-    public static String FileExporter(String copyPath, String name, String[] extensions) {
+    public static void FileExporter(String copyPath, String name, String[] extensions) {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Compatible files", extensions);
         fileChooser.setFileFilter(filter);
@@ -48,15 +48,13 @@ public class SongImport {
             System.out.println("Selected file: " + filePath);
             try {
                 Path source = Paths.get(filePath);
-                Path destination = Paths.get(currentWorkingDir + "/" + copyPath + "/" + name + "." + extension);
+                Path destination = Paths.get(currentWorkingDir + copyPath + "/" + name + "." + extension);
                 Files.copy(source, destination);
                 System.out.println("File copied successfully.");
             } catch (IOException e) {
                 System.err.println("Error copying file: " + e.getMessage());
             }
-            return extension;
         }
-        return "";
     }
 
     public void AddSongDatabase() {
@@ -92,7 +90,7 @@ public class SongImport {
             prepstat = connection.prepareStatement(insert_query);
 
             rowsInserted = prepstat.executeUpdate();
-            int result = -1;
+            int result = 0;
 
             try {
                 ResultSet rs4 = stmt
@@ -100,24 +98,8 @@ public class SongImport {
                 while (rs4.next()) {
                     result = rs4.getInt("author_id");
                 }
-                System.out.println(result);
+                stmt.close();
             } catch (Exception e) {
-                in_query2 = "SELECT COUNT(*) FROM song_data";
-                resultSet = stmt.executeQuery(in_query2);
-                int authorId = 0;
-                while (resultSet.next()) {
-                    authorId = resultSet.getInt("COUNT(*)") + 1;
-                }
-                insert_query = "INSERT INTO AUTHOR VALUES ("
-                        + authorId + ",'" + this.songAuthor + "'," + 100 + ")";
-                prepstat = connection.prepareStatement(insert_query);
-                rowsInserted = prepstat.executeUpdate();
-
-                result = authorId;
-                System.out.println("Dodano autora");
-            }
-
-            if (result == -1) {
                 in_query2 = "SELECT COUNT(*) FROM song_data";
                 resultSet = stmt.executeQuery(in_query2);
                 int authorId = 0;
@@ -142,7 +124,7 @@ public class SongImport {
             } else {
                 System.out.println("Nie G");
             }
-            stmt.close();
+
             connection.close();
 
         } catch (SQLException e) {
