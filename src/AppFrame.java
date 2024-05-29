@@ -48,8 +48,10 @@ public class AppFrame extends JFrame implements ActionListener {
     private ImageIcon searchIcon;
     private ImageIcon backgroundIcon;
     private JLabel titleLabel;
+    private Font font;
 
     AppFrame() {
+        initializeFont();
         initializeIcons();
         initializeColors();
         initializeButtons();
@@ -63,6 +65,15 @@ public class AppFrame extends JFrame implements ActionListener {
         initializeButtons();
         initializeFrame();
         initializePanels();
+    }
+
+    private void initializeFont() {
+        try {
+            File fontFile = new File("assets/BebasNeue-Regular.ttf");
+            this.font = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(24f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeIcons() {
@@ -97,7 +108,8 @@ public class AppFrame extends JFrame implements ActionListener {
         this.searchButton = createButton(searchIcon, 80, 50, Color.BLACK);
         this.addButton = createButton(addIcon, 80, 50, Color.BLACK);
 
-        this.searchButton.setFont(new Font("Arial", Font.BOLD, 18));
+        Font sizedFont = this.font.deriveFont(18f);
+        searchButton.setFont(sizedFont);
         this.searchButton.setForeground(Color.WHITE);
     }
 
@@ -186,7 +198,8 @@ public class AppFrame extends JFrame implements ActionListener {
     private JTextField createSearchField() {
         JTextField textField = new JTextField();
         textField.setPreferredSize(new Dimension(400, 50));
-        textField.setFont(new Font("Arial", Font.PLAIN, 18));
+        Font sizedFont = this.font.deriveFont(18f);
+        textField.setFont(sizedFont);
         textField.setForeground(Color.WHITE);
         textField.setBackground(Color.BLACK);
         return textField;
@@ -203,6 +216,7 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.setOpaque(false);
         panel.add(searchField, BorderLayout.CENTER);
         panel.add(searchButton, BorderLayout.EAST);
+        panel.add(addButton, BorderLayout.EAST);
         panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - panel.getPreferredSize().width / 2, 0, panel.getPreferredSize().width, panel.getPreferredSize().height);
         return panel;
     }
@@ -261,6 +275,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JPanel createPlaylistPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
+        panel.setBackground(Color.ORANGE);
         panel.setBorder(BorderFactory.createTitledBorder("Playlists"));
 
         ArrayList<Playlist> playlists = null;
@@ -339,6 +354,10 @@ public class AppFrame extends JFrame implements ActionListener {
     private JButton createButton(String text, ActionListener listener) {
         JButton button = new JButton(text);
         button.addActionListener(listener);
+        button.setBackground(Color.BLACK);
+        button.setForeground(Color.WHITE);
+        Font sizedFont = this.font.deriveFont(16f);
+        button.setFont(sizedFont);
         return button;
     }
 
@@ -354,7 +373,8 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.setBorder(BorderFactory.createTitledBorder("User"));
         this.usernameLabel = new JLabel("Username: " + (activeUser != null ? activeUser.getName() : "Guest"));
         this.usernameLabel.setForeground(Color.WHITE);
-        this.usernameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        Font sizedFont = this.font.deriveFont(18f);
+        this.usernameLabel.setFont(sizedFont);
         this.usernameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -369,7 +389,6 @@ public class AppFrame extends JFrame implements ActionListener {
         });
 
         panel.add(usernameLabel);
-        panel.add(addButton, BorderLayout.EAST);
         Dimension prefSize = panel.getPreferredSize();
         panel.setBounds(this.titleLabel.getPreferredSize().width+10, 20, prefSize.width, prefSize.height);
         return panel;
@@ -387,9 +406,10 @@ public class AppFrame extends JFrame implements ActionListener {
         songPanel.setBorder(border);
         songPanel.setBackground(Color.BLACK);
 
+        Font sizedFont = this.font.deriveFont(22f);
         // Song Label
         JLabel nameLabel = new JLabel(song.getName());
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 22)); // Set font size
+        nameLabel.setFont(sizedFont); // Set font size
         nameLabel.setForeground(Color.WHITE);
         songPanel.add(nameLabel, BorderLayout.WEST);
 
@@ -398,7 +418,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
         // Author Label
         JLabel authorLabel = new JLabel(" - " + song.getAuthor());
-        authorLabel.setFont(new Font("Arial", Font.PLAIN, 22)); // Set font size
+        authorLabel.setFont(sizedFont); // Set font size
         authorLabel.setForeground(Color.WHITE);
         songPanel.add(authorLabel);
 
@@ -615,6 +635,19 @@ public class AppFrame extends JFrame implements ActionListener {
 
     
     private class PlaylistCellRenderer extends DefaultListCellRenderer {
+        private JLabel nameLabel;
+
+        public PlaylistCellRenderer() {
+            setLayout(new BorderLayout());
+            setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+            setBackground(Color.ORANGE);
+
+            nameLabel = new JLabel();
+            nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            nameLabel.setForeground(Color.BLACK);
+            add(nameLabel, BorderLayout.CENTER);
+        }
+
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
