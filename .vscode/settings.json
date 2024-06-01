@@ -7,7 +7,8 @@
         "lib/ojdbc11.jar",
         "lib/ojdbc10.jar",
         "lib/ucp.jar",
-        "lib/ojdbc8.jar"
+        "lib/ojdbc8.jar",
+        "lib/junit-platform-console-standalone-1.11.0-M2.jar"
     ],
     "java.debug.settings.onBuildFailureProceed": true
 }

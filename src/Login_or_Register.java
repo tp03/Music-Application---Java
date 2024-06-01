@@ -50,11 +50,11 @@ public class Login_or_Register {
         if (check_result.size() != 0) {
             loginFrame.highlight_unfilled_register(check_result);
         } else {
-            UserCreator user_creator = new UserCreator();
-            user_creator.created_user(data.get("name"), data.get("surname"), data.get("nickname"), data.get("email"),
-                    data.get("password"));
-            UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
             try {
+                UserCreator user_creator = new UserCreator();
+                user_creator.created_user(data.get("name"), data.get("surname"), data.get("nickname"), data.get("email"),
+                    data.get("password"));
+                UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
                 this.logged_user = user_reader.searchDB();
                 loginFrame.dispose();
                 this.appFrame.setActiveUser(loggedUser());

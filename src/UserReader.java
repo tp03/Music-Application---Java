@@ -32,7 +32,7 @@ public class UserReader {
             }
             if (id == 0) {
                 
-                throw new Exception("bad");
+                throw new Exception("user doesn't exists");
             }
             stmt.close();
         } catch (SQLException e) {
