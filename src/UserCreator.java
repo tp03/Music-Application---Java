@@ -6,14 +6,15 @@ import java.sql.PreparedStatement;
 
 public class UserCreator {
 
-    private int id;
+    private int id = 0;
     private String name;
     private String last_name;
     private String username;
     private String email;
     private String pass;
+    private int successful;
     
-    void created_user(String name, String last_name, String user_name, String email, String passw)
+    void created_user(String name, String last_name, String user_name, String email, String passw) throws Exception
     {
         this.name = name;
         this.last_name = last_name;
@@ -54,9 +55,10 @@ public class UserCreator {
             int rowsInserted = prepstat.executeUpdate();
             
             if (rowsInserted > 0) {
-                System.out.println("G");
+                successful = 1;
             } else {
-                System.out.println("Nie G");
+                successful = 0;
+                throw new Exception("username already used");
             }
 
             connection.close();
@@ -66,6 +68,16 @@ public class UserCreator {
         {
             e.printStackTrace();
         }
+    }
+
+    int getId() {
+
+        return this.id;
+    }
+
+    int getSuccessful() {
+
+        return this.successful;
     }
 
 
