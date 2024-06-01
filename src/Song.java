@@ -11,7 +11,6 @@ public class Song {
     private String author_name;
     private int length;
     private int views;
-    private int data;
     private String imagePath;
     private String recordingPath;
     private String lyricsPath;
@@ -30,7 +29,6 @@ public class Song {
                 this.name = rs.getString("name");
                 this.length = rs.getInt("length");
                 this.views = rs.getInt("views");
-                this.data = rs.getInt("data_id");
                 this.author_id = rs.getInt("author_id");
                 this.imagePath = rs.getString("picture");
                 this.lyricsPath = rs.getString("lyrics");
