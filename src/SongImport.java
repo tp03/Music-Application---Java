@@ -14,13 +14,14 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 public class SongImport {
-    String recordingPath, IconPath, songName, songAuthor, iconExtension;
+    String recordingPath, IconPath, songName, songAuthor, iconExtension, textPath, textExtension;
     Connection connection = null;
     int id;
 
-    public SongImport(String recordingPath, String IconPath) {
+    public SongImport(String recordingPath, String IconPath, String textPath) {
         this.recordingPath = recordingPath;
         this.IconPath = IconPath;
+        this.textPath = textPath;
     }
 
     public void ImportSong(String songName, String author) {
@@ -30,6 +31,8 @@ public class SongImport {
         FileExporter(this.recordingPath, songName, record_extensions);
         String[] icon_extensions = { "png", "jpg" };
         this.iconExtension = FileExporter(this.IconPath, songName, icon_extensions);
+        String[] text_extensions = { "txt" };
+        this.textExtension = FileExporter(this.textPath, songName, text_extensions);
         AddSongDatabase();
     }
 
@@ -73,7 +76,8 @@ public class SongImport {
             }
 
             String insert_query = "INSERT INTO SONG_DATA VALUES ("
-                    + this.id + ", '" + this.songName + "', '" + this.recordingPath + "/" + this.songName + ".mp3"
+                    + this.id + ", '" + this.textPath + "/" + this.songName + "." + this.textExtension + "', '"
+                    + this.recordingPath + "/" + this.songName + ".mp3"
                     + "', '" + this.IconPath + "/" + this.songName + "." + this.iconExtension + "')";
             System.out.println(insert_query);
 
