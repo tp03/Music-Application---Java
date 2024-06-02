@@ -69,17 +69,12 @@ public class userTest {
                 test_result = false;
             }
             Connection connection = null;
-            try {
-                DatabaseConnection DC = new DatabaseConnection();
-                connection = DC.MakeConnection();
-                String insert_query = "DELETE FROM app_user WHERE user_id = " + user_creator_test.getId();
-                PreparedStatement prepstat = connection.prepareStatement(insert_query);
-                prepstat.executeQuery();
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }  
-
+            DatabaseConnection DC = new DatabaseConnection();
+            connection = DC.MakeConnection();
+            String insert_query = "DELETE FROM app_user WHERE user_id = " + user_creator_test.getId();
+            PreparedStatement prepstat = connection.prepareStatement(insert_query);
+            prepstat.executeQuery();
+            connection.close();
         }
         catch (Exception e)
         {}
@@ -252,6 +247,7 @@ public class userTest {
     void testPassword() {
 
         UserCreator user_creator_test = new UserCreator();
+        Connection connection = null;
 
         try {
             user_creator_test.created_user("test8", "testowy", "ksywka8", "test@gmail.com", "12345678");
@@ -259,28 +255,23 @@ public class userTest {
             UserReader user_reader_test = new UserReader("ksywka8", "12345678");
 
             Spotify_user tested_user = user_reader_test.searchDB();
-            
-            assertTrue(tested_user.getPassword().equals("12345678"));
-        }
-        catch (Exception e)
-        {}
 
-        Connection connection = null;
-        try {
+            String pass = tested_user.getPassword();
+
             DatabaseConnection DC = new DatabaseConnection();
             connection = DC.MakeConnection();
             String insert_query = "DELETE FROM app_user WHERE user_id = " + user_creator_test.getId();
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
             prepstat.executeQuery();
             connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }  
-
+            
+            assertTrue(pass.equals("12345678"));
+        }
+        catch (Exception e)
+        {}
     }
 
     @Test
-
     void nonExistantUser() {
 
         
@@ -297,14 +288,15 @@ public class userTest {
         {}
     }
 
+    @Test
     void wrongUserName() {
 
-        UserReader user_reader_test = new UserReader("tp03", "12345678");
+        UserCreator user_creator_test = new UserCreator();
 
         try {
             
             Exception exception = assertThrows(Exception.class, () ->
-            user_reader_test.searchDB());
+            user_creator_test.created_user("a", "b", "tp03", "c", "d"));
 
             assertEquals("username already used", exception.getMessage());
         }

@@ -21,10 +21,6 @@ public class Spotify_user {
         try {
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
-            if (connection != null) {
-                System.out.println("Successful");
-            } else
-                System.out.println("Error");
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT * FROM app_user WHERE user_id = " + this.id);
             while (resultSet.next()) {
@@ -79,7 +75,7 @@ public class Spotify_user {
         return this.user_playlists;
     }
 
-    Playlist createPlaylist(String playlist_name)
+    Playlist createPlaylist (String playlist_name) throws Exception
 
     {
         Connection connection = null;
@@ -89,6 +85,11 @@ public class Spotify_user {
             connection = dc.MakeConnection();
             String in_query = "SELECT MAX(playlist_id) FROM playlist";
             Statement stmt = connection.createStatement();
+            ResultSet check_name = stmt.executeQuery("Select * from playlist join user_playlist using(playlist_id) where name like '" + playlist_name + "' and user_id = " + this.id);
+            if (check_name.next())
+            {
+                throw new Exception("Playlist name already taken");
+            }
             ResultSet resultSet = stmt.executeQuery(in_query);
             while (resultSet.next()) {
 

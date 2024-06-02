@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -40,6 +41,23 @@ public class Song {
             }
             stmt.close();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void wasClicked() {
+        this.views++;
+        Connection connection = null;
+        try{
+            DatabaseConnection DC = new DatabaseConnection();
+            connection = DC.MakeConnection();
+            String insert_query = "update song set views = " + this.views + " where song_id = " + this.id;
+            PreparedStatement prepstat = connection.prepareStatement(insert_query);
+            prepstat.executeQuery();
+            connection.close();
+        }
+        catch (SQLException e)
+        {
             e.printStackTrace();
         }
     }
