@@ -28,17 +28,18 @@ public class UserCreator {
         try{
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
-            if (connection != null)
-            {
-                System.out.println("Successful");
-            }
-            else
-                System.out.println("Error");
-
             String in_query2 = "SELECT MAX(user_id) FROM app_user";
             
             Statement stmt = connection.createStatement();
 
+            ResultSet check = stmt.executeQuery("Select * from app_user where nick like '" + this.username + "'");
+            if (!check.next()) {
+                successful = 1;
+            } else {
+                successful = 0;
+                throw new Exception("username already used");
+            }
+            
             ResultSet resultSet = stmt.executeQuery(in_query2);
 
             while (resultSet.next()) {
@@ -53,13 +54,6 @@ public class UserCreator {
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
 
             int rowsInserted = prepstat.executeUpdate();
-            
-            if (rowsInserted > 0) {
-                successful = 1;
-            } else {
-                successful = 0;
-                throw new Exception("username already used");
-            }
 
             connection.close();
 

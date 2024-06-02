@@ -333,9 +333,16 @@ public class AppFrame extends JFrame implements ActionListener {
         playlistButtonPanel.add(createButton("Add Playlist", e -> {
             String playlistName = JOptionPane.showInputDialog("Enter playlist name:");
             if (playlistName != null && !playlistName.trim().isEmpty()) {
-                Playlist playlist = activeUser.createPlaylist(playlistName);
-                if (playlist != null) {
-                    playlistModel.addElement(playlist);
+                try{
+                    Playlist playlist = activeUser.createPlaylist(playlistName);
+                
+                    if (playlist != null) {
+                        playlistModel.addElement(playlist);
+                    }
+                }
+                catch(Exception er)
+                {
+                    er.printStackTrace();
                 }
 
             }
@@ -487,6 +494,7 @@ public class AppFrame extends JFrame implements ActionListener {
                     // Left-clicked
                     String recordingPath = song.getRecordingPath();
                     if (recordingPath != null && !recordingPath.isEmpty()) {
+                        song.wasClicked();
                         try {
                             if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
                                 AppFrame.this.clip.stop();
@@ -730,7 +738,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
         for (Song song : songs) {
             JPanel songPanel = createSongPanel(song);
-            System.out.println(song.getName());
+            //System.out.println(song.getName());
             songListPanel.add(songPanel);
         }
         Dimension searchprefSize = this.searchPanel.getPreferredSize();
