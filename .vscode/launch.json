@@ -3,6 +3,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "LoginFrame",
+            "request": "launch",
+            "mainClass": "LoginFrame",
+            "projectName": "SpotiSing_803584d5"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "SpotiSing_803584d5"
+        },
+        {
+            "type": "java",
             "name": "App",
             "request": "launch",
             "mainClass": "App",

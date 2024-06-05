@@ -95,7 +95,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
     private void initializeButtons() {
         this.buttonWidth = 100;
-        this.songWidth = 600;
+        this.songWidth = 700;
 
         this.skipButton = createButton(skipIcon, buttonWidth, buttonWidth, Color.BLACK);
         this.pauseButton = createButton(pauseIcon, buttonWidth, buttonWidth, Color.BLACK);
@@ -211,6 +211,11 @@ public class AppFrame extends JFrame implements ActionListener {
         this.add(playlistPanel);
         this.add(userPanel);
         this.add(createTopPanel(titleLabel));
+
+        this.fileViewer = new FileViewerPanel();
+        this.fileViewer.setBounds(50, 135, 500, 830); // Set the position and size of the
+                                                      // panel
+        this.add(this.fileViewer);
     }
 
     private JScrollPane createScrollPane() {
@@ -311,11 +316,11 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createPlaylistPanel() {
-        JPanel panel = new JPanel(new BorderLayout()){
+        JPanel panel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                
+
             }
         };
 
@@ -337,16 +342,16 @@ public class AppFrame extends JFrame implements ActionListener {
         JScrollPane playlistScrollPane = new JScrollPane(playlistList);
         playlistScrollPane.setOpaque(true);
         playlistScrollPane.setBackground(panelColor);
-        playlistScrollPane.getViewport().setOpaque(true); 
+        playlistScrollPane.getViewport().setOpaque(true);
         playlistScrollPane.getViewport().setBackground(panelColor);
 
         JPanel playlistButtonPanel = new JPanel();
         playlistButtonPanel.add(createButton("Add Playlist", e -> {
             String playlistName = JOptionPane.showInputDialog("Enter playlist name:");
             if (playlistName != null && !playlistName.trim().isEmpty()) {
-                try{
+                try {
                     Playlist playlist = activeUser.createPlaylist(playlistName);
-                
+
                     if (playlist != null) {
                         playlistModel.addElement(playlist);
                     }
@@ -377,9 +382,9 @@ public class AppFrame extends JFrame implements ActionListener {
 
         panel.add(playlistScrollPane, BorderLayout.CENTER);
         panel.add(playlistButtonPanel, BorderLayout.SOUTH);
-        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2 + panel.getPreferredSize().width +10,
-                searchPanel.getPreferredSize().height + 15, panel.getPreferredSize().width,
-                Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 4);
+        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 + songWidth / 2 + 40,
+                searchPanel.getPreferredSize().height, panel.getPreferredSize().width,
+                Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 6);
         return panel;
     }
 
@@ -394,6 +399,19 @@ public class AppFrame extends JFrame implements ActionListener {
         for (Song song : playlist.getSongs()) {
             songModel.addElement(song);
         }
+
+        songList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int index = songList.locationToIndex(e.getPoint());
+                    if (index != -1) {
+                        Song selectedSong = songModel.getElementAt(index);
+                        playSong(selectedSong);
+                    }
+                }
+            }
+        });
 
         JScrollPane songScrollPane = new JScrollPane(songList);
         dialog.add(songScrollPane, BorderLayout.CENTER);
@@ -466,7 +484,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
         // Song Label
         JLabel nameLabel = new JLabel(song.getName());
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 22)); // Set font size
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size
         nameLabel.setForeground(Color.WHITE);
         songPanel.add(nameLabel, BorderLayout.WEST);
 
@@ -475,16 +493,23 @@ public class AppFrame extends JFrame implements ActionListener {
 
         // Author Label
         JLabel authorLabel = new JLabel(" - " + song.getAuthor());
-        authorLabel.setFont(new Font("Arial", Font.PLAIN, 22)); // Set font size
+        authorLabel.setFont(new Font("Arial", Font.PLAIN, 20)); // Set font size
         authorLabel.setForeground(Color.WHITE);
         songPanel.add(authorLabel);
+
+        // Author Label
+        JLabel viewsLabel = new JLabel(" Views: " + song.getViews());
+        viewsLabel.setFont(new Font("Arial", Font.PLAIN, 15)); // Set font size
+        viewsLabel.setForeground(Color.WHITE);
+        songPanel.add(Box.createHorizontalGlue());
+        songPanel.add(viewsLabel);
 
         // Image
         ImageIcon imageIcon = new ImageIcon(song.getImagePath());
         Image image = imageIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize image
         ImageIcon resizedIcon = new ImageIcon(image);
         JLabel imageLabel = new JLabel(resizedIcon);
-        songPanel.add(Box.createHorizontalGlue());
+        // songPanel.add(Box.createHorizontalGlue());
         songPanel.add(imageLabel);
 
         songPanel.addMouseListener(new MouseAdapter() {
@@ -504,36 +529,41 @@ public class AppFrame extends JFrame implements ActionListener {
                     popupMenu.show(songPanel, e.getX(), e.getY());
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
                     // Left-clicked
-                    String recordingPath = song.getRecordingPath();
-                    if (recordingPath != null && !recordingPath.isEmpty()) {
-                        song.wasClicked();
-                        try {
-                            if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
-                                AppFrame.this.clip.stop();
-                                AppFrame.this.clip.close();
-                                AppFrame.this.remove(AppFrame.this.fileViewer);
-                            }
-                            File recordingFile = new File(recordingPath);
-                            AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
-                            AppFrame.this.clip = AudioSystem.getClip();
-                            AppFrame.this.clip.open(audioStream);
-                            AppFrame.this.clip.start();
-                            String textPath = song.getLyricsPath();
-                            AppFrame.this.fileViewer = new FileViewerPanel(textPath);
-                            AppFrame.this.fileViewer.setBounds(50, 135, 500, 830); // Set the position and size of the
-                                                                                   // panel
-                            AppFrame.this.add(AppFrame.this.fileViewer);
-                            Timer timer = new Timer(100, timerAction);
-                            timer.start();
-                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
+                    playSong(song);
                 }
             }
         });
 
         return songPanel;
+    }
+
+    private void playSong(Song song)
+    {
+        String recordingPath = song.getRecordingPath();
+        if (recordingPath != null && !recordingPath.isEmpty()) {
+            song.wasClicked();
+            String textPath = song.getLyricsPath();
+            AppFrame.this.fileViewer.displayFileContent(new File(textPath));
+            AppFrame.this.fileViewer.repaint();
+
+            try {
+                if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
+                    AppFrame.this.clip.stop();
+                    AppFrame.this.clip.close();
+                    // AppFrame.this.remove(AppFrame.this.fileViewer);
+                }
+                File recordingFile = new File(recordingPath);
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
+                AppFrame.this.clip = AudioSystem.getClip();
+                AppFrame.this.clip.open(audioStream);
+                AppFrame.this.clip.start();
+                Timer timer = new Timer(100, timerAction);
+                timer.start();
+                //drawCustom();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     private void addToPlaylist(Song song) {
@@ -610,7 +640,11 @@ public class AppFrame extends JFrame implements ActionListener {
             String selectedColor = showColorDialog(this);
             if (!selectedColor.equals("")) {
                 this.activeUser.setpreferedColor(selectedColor);
-                initialize();
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                this.backgroundIcon = createScaledIcon("assets/" + this.activeUser.getpreferedColor(), screenSize.width,
+                        screenSize.height);
+                this.backgroundLabel.setIcon(this.backgroundIcon);
+                this.repaint(); // Odświeżenie ramki
             }
         }
     }
@@ -658,6 +692,26 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
+    private Song getLastSong() {
+        Song song = new Song(0);
+        try {
+            DatabaseConnection newCon = new DatabaseConnection();
+            Connection connection = newCon.MakeConnection();
+            String in_query2 = "SELECT COUNT(*) FROM song_data";
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(in_query2);
+            int idMax = 1;
+            while (resultSet.next()) {
+
+                idMax = resultSet.getInt("COUNT(*)");
+            }
+            song = new Song(idMax);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return song;
+    }
+
     private void handlePause() {
         // Implement the logic to pause or resume the song
         if (clip != null) {
@@ -685,20 +739,18 @@ public class AppFrame extends JFrame implements ActionListener {
     private void handleSearch() {
         // Implement the logic to perform a search
         String searchText = searchField.getText();
-        if (!searchText.isEmpty()) {
-            // Logic to search for songs based on searchText
-            // Example: Clear the song list panel and add search results
-            this.searchQuery = searchText;
-
-        }
-        drawCustom();
+        this.searchQuery = searchText;
+        drawSearchSong();
     }
 
     private void handleAddSong() {
         String songName = JOptionPane.showInputDialog("Enter song name:");
         String songAutor = JOptionPane.showInputDialog("Enter song author:");
         songImporter.ImportSong(songName, songAutor);
-        drawCustom();
+        Song new_song = getLastSong();
+        JPanel songPanel = createSongPanel(new_song);
+        this.songListPanel.add(songPanel);
+        this.songListPanel.repaint();
 
     }
 
@@ -715,6 +767,26 @@ public class AppFrame extends JFrame implements ActionListener {
         // JPanel playlistPanel = createPlaylistPanel();
         // this.add(playlistPanel);
         // this.playlistPanel = playlistPanel;
+    }
+
+    public void drawSearchSong() {
+        this.songListPanel.removeAll();
+        String inputText = this.searchQuery;
+        ArrayList<Song> songs;
+        if (inputText.equals("")) {
+            songs = createSongsArray();
+        } else {
+            SearchEngine searchEngine = new SearchEngine();
+            searchEngine.make_song_search(inputText);
+            songs = searchEngine.returned_songs;
+            searchEngine.make_author_search(inputText);
+            songs.addAll(searchEngine.returned_songs);
+        }
+        for (Song song : songs) {
+            JPanel songPanel = createSongPanel(song);
+            songListPanel.add(songPanel);
+        }
+        this.songListPanel.repaint();
     }
 
     public void drawSongs() {
