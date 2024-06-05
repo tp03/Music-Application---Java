@@ -220,7 +220,6 @@ public class AppFrame extends JFrame implements ActionListener {
 
         for (Song song : songs) {
             JPanel songPanel = createSongPanel(song);
-            System.out.println(song.getName());
             songListPanel.add(songPanel);
         }
         Dimension searchprefSize = this.searchPanel.getPreferredSize();
@@ -522,7 +521,6 @@ public class AppFrame extends JFrame implements ActionListener {
                             AppFrame.this.fileViewer.setBounds(50, 135, 500, 830); // Set the position and size of the
                                                                                    // panel
                             AppFrame.this.add(AppFrame.this.fileViewer);
-                            System.out.println(textPath);
                             Timer timer = new Timer(100, timerAction);
                             timer.start();
                         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
@@ -580,8 +578,6 @@ public class AppFrame extends JFrame implements ActionListener {
 
                 idMax = resultSet.getInt("COUNT(*)");
             }
-            System.out.println(idMax);
-
             for (int id = 1; id <= idMax; id++) {
                 songs.add(new Song(id));
             }
@@ -657,7 +653,6 @@ public class AppFrame extends JFrame implements ActionListener {
             clip.stop();
             long clipLength = this.clip.getMicrosecondLength();
             this.clip.setMicrosecondPosition(clipLength);
-            System.out.println("Skipped to the next song");
         }
     }
 
@@ -667,11 +662,9 @@ public class AppFrame extends JFrame implements ActionListener {
             if (clip.isRunning()) {
                 clip.stop();
                 pauseButton.setIcon(playIcon); // Change to play icon when paused
-                System.out.println("Song paused");
             } else {
                 clip.start();
                 pauseButton.setIcon(pauseIcon); // Change to pause icon when playing
-                System.out.println("Song playing");
             }
         }
     }
@@ -684,7 +677,6 @@ public class AppFrame extends JFrame implements ActionListener {
                 clip.start();
                 pauseButton.setIcon(pauseIcon); // Ensure icon shows pause if starting playback
             }
-            System.out.println("Returned to the beginning of the song");
         }
     }
 
@@ -693,10 +685,8 @@ public class AppFrame extends JFrame implements ActionListener {
         String searchText = searchField.getText();
         if (!searchText.isEmpty()) {
             // Logic to search for songs based on searchText
-            System.out.println("Search performed for: " + searchText);
             // Example: Clear the song list panel and add search results
             this.searchQuery = searchText;
-            System.out.println(this.searchQuery);
 
         }
         drawCustom();
@@ -744,12 +734,10 @@ public class AppFrame extends JFrame implements ActionListener {
             songs = searchEngine.returned_songs;
             searchEngine.make_author_search(inputText);
             songs.addAll(searchEngine.returned_songs);
-            System.out.println(songs);
         }
 
         for (Song song : songs) {
             JPanel songPanel = createSongPanel(song);
-            //System.out.println(song.getName());
             songListPanel.add(songPanel);
         }
         Dimension searchprefSize = this.searchPanel.getPreferredSize();
