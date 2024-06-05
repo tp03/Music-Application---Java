@@ -311,7 +311,14 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createPlaylistPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout()){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                
+            }
+        };
+
         panel.setOpaque(false);
         panel.setBackground(Color.ORANGE);
         panel.setBorder(BorderFactory.createTitledBorder("Playlists"));
@@ -328,6 +335,10 @@ public class AppFrame extends JFrame implements ActionListener {
         this.playlistList.setCellRenderer(new PlaylistCellRenderer());
 
         JScrollPane playlistScrollPane = new JScrollPane(playlistList);
+        playlistScrollPane.setOpaque(true);
+        playlistScrollPane.setBackground(panelColor);
+        playlistScrollPane.getViewport().setOpaque(true); 
+        playlistScrollPane.getViewport().setBackground(panelColor);
 
         JPanel playlistButtonPanel = new JPanel();
         playlistButtonPanel.add(createButton("Add Playlist", e -> {
@@ -365,8 +376,8 @@ public class AppFrame extends JFrame implements ActionListener {
 
         panel.add(playlistScrollPane, BorderLayout.CENTER);
         panel.add(playlistButtonPanel, BorderLayout.SOUTH);
-        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width - panel.getPreferredSize().width - 40,
-                searchPanel.getPreferredSize().height + 60, panel.getPreferredSize().width,
+        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2 + panel.getPreferredSize().width +10,
+                searchPanel.getPreferredSize().height + 15, panel.getPreferredSize().width,
                 Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 4);
         return panel;
     }
@@ -486,7 +497,7 @@ public class AppFrame extends JFrame implements ActionListener {
                         addToPlaylist(song);
                         playlistPanel.revalidate();
                         playlistPanel.repaint();
-                        // drawCustom();
+                        drawCustom();
                     });
                     popupMenu.add(addToPlaylistItem);
                     popupMenu.show(songPanel, e.getX(), e.getY());
@@ -772,7 +783,19 @@ public class AppFrame extends JFrame implements ActionListener {
             if (value instanceof Playlist) {
                 Playlist playlist = (Playlist) value;
                 setText(playlist.getName());
+                setText(playlist.getName());
+                setFont(new Font("Arial", Font.BOLD, 24));
+                setBackground(panelColor);
+                setForeground(Color.WHITE);
+                setHorizontalAlignment(SwingConstants.LEFT);
             }
+            if (isSelected) {
+                setBackground(Color.LIGHT_GRAY);
+            } else {
+                setBackground(Color.ORANGE);
+                setBackground(panelColor);
+            }
+
             return this;
         }
     }
