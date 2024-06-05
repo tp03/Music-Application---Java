@@ -94,7 +94,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
     private void initializeButtons() {
         this.buttonWidth = 100;
-        this.songWidth = 600;
+        this.songWidth = 700;
 
         this.skipButton = createButton(skipIcon, buttonWidth, buttonWidth, Color.BLACK);
         this.pauseButton = createButton(pauseIcon, buttonWidth, buttonWidth, Color.BLACK);
@@ -467,7 +467,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
         // Song Label
         JLabel nameLabel = new JLabel(song.getName());
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 22)); // Set font size
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size
         nameLabel.setForeground(Color.WHITE);
         songPanel.add(nameLabel, BorderLayout.WEST);
 
@@ -476,16 +476,23 @@ public class AppFrame extends JFrame implements ActionListener {
 
         // Author Label
         JLabel authorLabel = new JLabel(" - " + song.getAuthor());
-        authorLabel.setFont(new Font("Arial", Font.PLAIN, 22)); // Set font size
+        authorLabel.setFont(new Font("Arial", Font.PLAIN, 20)); // Set font size
         authorLabel.setForeground(Color.WHITE);
         songPanel.add(authorLabel);
+
+        // Author Label
+        JLabel viewsLabel = new JLabel(" Views: " + song.getViews());
+        viewsLabel.setFont(new Font("Arial", Font.PLAIN, 15)); // Set font size
+        viewsLabel.setForeground(Color.WHITE);
+        songPanel.add(Box.createHorizontalGlue());
+        songPanel.add(viewsLabel);
 
         // Image
         ImageIcon imageIcon = new ImageIcon(song.getImagePath());
         Image image = imageIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); // Resize image
         ImageIcon resizedIcon = new ImageIcon(image);
         JLabel imageLabel = new JLabel(resizedIcon);
-        songPanel.add(Box.createHorizontalGlue());
+        // songPanel.add(Box.createHorizontalGlue());
         songPanel.add(imageLabel);
 
         songPanel.addMouseListener(new MouseAdapter() {
