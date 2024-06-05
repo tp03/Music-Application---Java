@@ -16,10 +16,6 @@ public class SearchEngine {
         try {
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
-            if (connection != null) {
-                System.out.println("Successful");
-            } else
-                System.out.println("Error");
 
             String search_query = "SELECT * FROM song WHERE upper(name) like '%" + this.ask.toUpperCase() + "%'";
             Statement stmt = connection.createStatement();
@@ -44,10 +40,6 @@ public class SearchEngine {
         try {
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
-            if (connection != null) {
-                System.out.println("Successful");
-            } else
-                System.out.println("Error");
 
             String search_query = "SELECT * FROM (SONG s join AUTHOR_SONGS aus using(song_id)) join AUTHOR au using(author_id) WHERE upper(au.name) like '%"
                     + this.ask.toUpperCase() + "%'";

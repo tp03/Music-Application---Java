@@ -11,10 +11,6 @@ public class DatabaseConnection {
             String usern = "tzalews1";
             String password = "tzalews1";
             connection = DriverManager.getConnection(url, usern, password);
-            if (connection != null) {
-                System.out.println("Successful");
-            } else
-                System.out.println("Error");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {

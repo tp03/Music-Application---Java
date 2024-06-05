@@ -19,10 +19,6 @@ public class UserReader {
         try {
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
-            if (connection != null) {
-                System.out.println("Successful");
-            } else
-                System.out.println("Error");
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT * FROM app_user WHERE (nick = '" + this.username
                     + "') AND (password = '" + this.pass + "')");
