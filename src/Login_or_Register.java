@@ -13,10 +13,14 @@ public class Login_or_Register {
     private LoginFrame loginFrame;
     private AppFrame appFrame;
     private Spotify_user logged_user;
+    private IncorrectPassword inc_pass;
+    private UsedUsername used_user;
 
     Login_or_Register(LoginFrame loginFrame, AppFrame AppFrame, JButton loginbutton, JButton registerbutton) {
         this.appFrame = AppFrame;
         this.loginFrame = loginFrame;
+        this.inc_pass = new IncorrectPassword(this.loginFrame); 
+        this.used_user = new UsedUsername(this.loginFrame);
         add_login_on_click(loginbutton);
         add_register_on_click(registerbutton);
 
@@ -50,20 +54,20 @@ public class Login_or_Register {
         if (check_result.size() != 0) {
             loginFrame.highlight_unfilled_register(check_result);
         } else {
-            UserCreator user_creator = new UserCreator();
-            user_creator.created_user(data.get("name"), data.get("surname"), data.get("nickname"), data.get("email"),
+            try {
+                UserCreator user_creator = new UserCreator();
+                user_creator.created_user(data.get("name"), data.get("surname"), data.get("nickname"), data.get("email"),
                     data.get("password"));
-            UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
-            try{
+                UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
                 this.logged_user = user_reader.searchDB();
                 loginFrame.dispose();
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.initialize();
                 appFrame.setVisible(true);
-            }
-            catch (Exception e)
-            {
-                System.out.println("Bad");
+                this.appFrame.setActiveUser(loggedUser());
+                appFrame.drawCustom();
+            } catch (Exception e) {
+                this.used_user.showUsedUsername(this.loginFrame);
             }
         }
     }
@@ -75,16 +79,16 @@ public class Login_or_Register {
             loginFrame.highlight_unfilled_login(check_result);
         } else {
             UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
-            try{
+            try {
                 this.logged_user = user_reader.searchDB();
                 loginFrame.dispose();
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.initialize();
                 appFrame.setVisible(true);
-            }
-            catch (Exception e)
-            {
-                System.out.println("Bad");
+                this.appFrame.setActiveUser(loggedUser());
+                appFrame.drawCustom();
+            } catch (Exception e) {
+                this.inc_pass.showIncorrectPasswordDialog(this.loginFrame);
             }
         }
     }
