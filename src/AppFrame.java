@@ -555,7 +555,7 @@ public class AppFrame extends JFrame implements ActionListener {
                 AppFrame.this.clip.start();
                 Timer timer = new Timer(100, timerAction);
                 timer.start();
-                drawCustom();
+                //drawCustom();
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                 ex.printStackTrace();
             }
