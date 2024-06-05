@@ -105,10 +105,7 @@ public class Playlist {
                 writer.write(line);
                 writer.newLine();
             }
-            System.out.println("Song saved to " + playlist_name);
-        } catch (IOException e) {
-            System.err.println("Error occurred while saving playlist: " + e.getMessage());
-        }
+        } catch (IOException e) {}
     }
 
     public void Shuffle() {

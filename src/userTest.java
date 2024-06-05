@@ -127,8 +127,7 @@ public class userTest {
             UserReader user_reader_test = new UserReader("ksywka4", "12345678");
 
             Spotify_user tested_user = user_reader_test.searchDB();
-
-            System.out.println(tested_user.getName());            
+         
             assertTrue(tested_user.getName().equals("test4"));
         }
         catch (Exception e)

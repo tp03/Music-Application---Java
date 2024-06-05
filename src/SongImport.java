@@ -45,12 +45,10 @@ public class SongImport {
             String filePath = fileChooser.getSelectedFile().getAbsolutePath();
             String extension = filePath.substring(filePath.lastIndexOf('.') + 1);
             String currentWorkingDir = System.getProperty("user.dir");
-            System.out.println("Selected file: " + filePath);
             try {
                 Path source = Paths.get(filePath);
                 Path destination = Paths.get(currentWorkingDir + "/" + copyPath + "/" + name + "." + extension);
                 Files.copy(source, destination);
-                System.out.println("File copied successfully.");
             } catch (IOException e) {
                 System.err.println("Error copying file: " + e.getMessage());
             }
@@ -79,7 +77,6 @@ public class SongImport {
                     + this.id + ", '" + this.textPath + "/" + this.songName + "." + this.textExtension + "', '"
                     + this.recordingPath + "/" + this.songName + ".mp3"
                     + "', '" + this.IconPath + "/" + this.songName + "." + this.iconExtension + "')";
-            System.out.println(insert_query);
 
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
 
@@ -100,7 +97,6 @@ public class SongImport {
                 while (rs4.next()) {
                     result = rs4.getInt("author_id");
                 }
-                System.out.println(result);
             } catch (Exception e) {
                 in_query2 = "SELECT COUNT(*) FROM song_data";
                 resultSet = stmt.executeQuery(in_query2);
@@ -114,7 +110,6 @@ public class SongImport {
                 rowsInserted = prepstat.executeUpdate();
 
                 result = authorId;
-                System.out.println("Dodano autora");
             }
 
             if (result == -1) {
@@ -130,18 +125,11 @@ public class SongImport {
                 rowsInserted = prepstat.executeUpdate();
 
                 result = authorId;
-                System.out.println("Dodano autora");
             }
             insert_query = "INSERT INTO AUTHOR_SONGS VALUES ("
                     + this.id + "," + result + "," + this.id + ")";
             prepstat = connection.prepareStatement(insert_query);
             rowsInserted = prepstat.executeUpdate();
-            System.out.println("Dodano utwór do autora");
-            if (rowsInserted > 0) {
-                System.out.println("G");
-            } else {
-                System.out.println("Nie G");
-            }
             stmt.close();
             connection.close();
 
