@@ -3,12 +3,28 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class IncorrectPassword extends JDialog {
-    public IncorrectPassword(Frame parent) {
+public class Error extends JDialog {
+    public Error(Frame parent, int which_one) {
         super(parent, "Błąd", true);
 
+        String text = null;
+
+
         // Ustawienie komunikatu
-        JLabel messageLabel = new JLabel("Błędnie wprowadzone hasło lub nazwa użytkownika. Spróbuj ponownie.");
+        if (which_one == 0)
+        {
+            text = "Błędnie wprowadzone hasło lub nazwa użytkownika. Spróbuj ponownie.";
+        }
+        else if (which_one == 1)
+        {
+            text = "Nazwa użytkownika jest już w użyciu. Spróbuj użyć innej.";
+        }
+        else if (which_one == 2)
+        {
+            text = "Playlista o tej nazwie już istnieje";
+        }
+
+        JLabel messageLabel = new JLabel(text);
         messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         // Ustawienie przycisku OK
@@ -32,8 +48,8 @@ public class IncorrectPassword extends JDialog {
     }
 
     // Metoda do wyświetlania okna dialogowego
-    public static void showIncorrectPasswordDialog(Frame parent) {
-        IncorrectPassword dialog = new IncorrectPassword(parent);
+    public static void showErrorDialog(Frame parent, int which) {
+        Error dialog = new Error(parent, which);
         dialog.setVisible(true);
     }
 }

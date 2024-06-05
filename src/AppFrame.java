@@ -27,6 +27,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JPanel songListPanel;
     private JScrollPane scrollPane;
     private JTextField searchField;
+    private Error playlist_err;
     private JPanel searchPanel;
     private SongImport songImporter = new SongImport("lyrics", "recordings", "assets");
 
@@ -352,7 +353,8 @@ public class AppFrame extends JFrame implements ActionListener {
                 }
                 catch(Exception er)
                 {
-                    er.printStackTrace();
+                    this.playlist_err = new Error(this, 2);
+                    this.playlist_err.showErrorDialog(this, 2);
                 }
 
             }
