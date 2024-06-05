@@ -497,8 +497,9 @@ public class AppFrame extends JFrame implements ActionListener {
         JLabel viewsLabel = new JLabel(" Views: " + song.getViews());
         viewsLabel.setFont(new Font("Arial", Font.PLAIN, 15)); // Set font size
         viewsLabel.setForeground(Color.WHITE);
+        song.setViewsLabel(viewsLabel);
         songPanel.add(Box.createHorizontalGlue());
-        songPanel.add(viewsLabel);
+        songPanel.add(song.getViewsLabel());
 
         // Image
         ImageIcon imageIcon = new ImageIcon(song.getImagePath());
@@ -533,11 +534,12 @@ public class AppFrame extends JFrame implements ActionListener {
         return songPanel;
     }
 
-    private void playSong(Song song)
-    {
+    private void playSong(Song song) {
         String recordingPath = song.getRecordingPath();
         if (recordingPath != null && !recordingPath.isEmpty()) {
             song.wasClicked();
+            song.getViewsLabel().setText(" Views: " + song.getViews());
+            song.getViewsLabel().repaint();
             String textPath = song.getLyricsPath();
             AppFrame.this.fileViewer.displayFileContent(new File(textPath));
             AppFrame.this.fileViewer.repaint();
@@ -555,7 +557,7 @@ public class AppFrame extends JFrame implements ActionListener {
                 AppFrame.this.clip.start();
                 Timer timer = new Timer(100, timerAction);
                 timer.start();
-                //drawCustom();
+                // drawCustom();
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                 ex.printStackTrace();
             }

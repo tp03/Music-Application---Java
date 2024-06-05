@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.JLabel;
+
 public class Song {
 
     private int id;
@@ -15,6 +17,7 @@ public class Song {
     private String imagePath;
     private String recordingPath;
     private String lyricsPath;
+    private JLabel viewsLabel;
 
     public Song(int id) {
         this.id = id;
@@ -48,18 +51,24 @@ public class Song {
     public void wasClicked() {
         this.views++;
         Connection connection = null;
-        try{
+        try {
             DatabaseConnection DC = new DatabaseConnection();
             connection = DC.MakeConnection();
             String insert_query = "update song set views = " + this.views + " where song_id = " + this.id;
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
             prepstat.executeQuery();
             connection.close();
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public JLabel getViewsLabel() {
+        return this.viewsLabel;
+    }
+
+    public void setViewsLabel(JLabel newLabel) {
+        this.viewsLabel = newLabel;
     }
 
     public int getID() {
