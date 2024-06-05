@@ -376,8 +376,8 @@ public class AppFrame extends JFrame implements ActionListener {
 
         panel.add(playlistScrollPane, BorderLayout.CENTER);
         panel.add(playlistButtonPanel, BorderLayout.SOUTH);
-        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2 + panel.getPreferredSize().width +10,
-                searchPanel.getPreferredSize().height + 15, panel.getPreferredSize().width,
+        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2 + songWidth/2+20,
+                searchPanel.getPreferredSize().height, panel.getPreferredSize().width,
                 Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 4);
         return panel;
     }
