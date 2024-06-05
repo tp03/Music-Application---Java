@@ -4,6 +4,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class LoginFrame extends JFrame {
     private Color backgroundColor;
@@ -197,7 +199,63 @@ public class LoginFrame extends JFrame {
         return button;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(LoginFrame::new);
+    // New methods for Login_or_Register class integration
+    public Map<String, String> collect_register_data() {
+        Map<String, String> data = new HashMap<>();
+        data.put("nickname", register_input_map.get("nickname").getText());
+        data.put("email", register_input_map.get("email").getText());
+        data.put("name", register_input_map.get("name").getText());
+        data.put("surname", register_input_map.get("surname").getText());
+        data.put("password", new String(password_field_register.getPassword()));
+        return data;
+    }
+
+    public Map<String, String> collect_login_data() {
+        Map<String, String> data = new HashMap<>();
+        data.put("nickname", login_input_map.get("nickname").getText());
+        data.put("password", new String(password_field_login.getPassword()));
+        return data;
+    }
+
+    public void highlight_unfilled_register(List<String> fields) {
+        reset_register_color();
+        for (String field : fields) {
+            if (login_input_map.containsKey(field)) {
+                register_input_map.get(field).setBackground(Color.PINK);
+            } else {
+                password_field_register.setBackground(Color.PINK);
+            }
+
+            // JTextField textField = login_input_map.get(field);
+            // textField.setBackground(Color.PINK);
+        }
+    }
+
+    public void highlight_unfilled_login(List<String> fields) {
+        reset_login_color();
+        for (String field : fields) {
+            if (login_input_map.containsKey(field)) {
+                login_input_map.get(field).setBackground(Color.PINK);
+            } else {
+                password_field_login.setBackground(Color.PINK);
+            }
+
+            // JTextField textField = login_input_map.get(field);
+            // textField.setBackground(Color.PINK);
+        }
+    }
+
+    public void reset_register_color() {
+        for (JTextField value : register_input_map.values()) {
+            value.setBackground(new Color(255, 255, 255));
+        }
+        password_field_register.setBackground(new Color(255, 255, 255));
+    }
+
+    public void reset_login_color() {
+        for (JTextField value : login_input_map.values()) {
+            value.setBackground(new Color(255, 255, 255));
+        }
+        password_field_login.setBackground(new Color(255, 255, 255));
     }
 }
