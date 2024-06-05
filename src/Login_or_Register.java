@@ -19,8 +19,8 @@ public class Login_or_Register {
     Login_or_Register(LoginFrame loginFrame, AppFrame AppFrame, JButton loginbutton, JButton registerbutton) {
         this.appFrame = AppFrame;
         this.loginFrame = loginFrame;
-        this.inc_pass = new Error(this.loginFrame, 0); 
-        this.used_user= new Error(this.loginFrame, 1);
+        this.inc_pass = new Error(this.loginFrame, 0);
+        this.used_user = new Error(this.loginFrame, 1);
         add_login_on_click(loginbutton);
         add_register_on_click(registerbutton);
 
@@ -56,8 +56,9 @@ public class Login_or_Register {
         } else {
             try {
                 UserCreator user_creator = new UserCreator();
-                user_creator.created_user(data.get("name"), data.get("surname"), data.get("nickname"), data.get("email"),
-                    data.get("password"));
+                user_creator.created_user(data.get("name"), data.get("surname"), data.get("nickname"),
+                        data.get("email"),
+                        data.get("password"));
                 UserReader user_reader = new UserReader(data.get("nickname"), data.get("password"));
                 this.logged_user = user_reader.searchDB();
                 loginFrame.dispose();
@@ -66,6 +67,7 @@ public class Login_or_Register {
                 appFrame.setVisible(true);
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.drawCustom();
+                appFrame.pack();
             } catch (Exception e) {
                 this.used_user.showErrorDialog(this.loginFrame, 1);
             }
@@ -87,6 +89,7 @@ public class Login_or_Register {
                 appFrame.setVisible(true);
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.drawCustom();
+                appFrame.pack();
             } catch (Exception e) {
                 this.inc_pass.showErrorDialog(this.loginFrame, 0);
             }

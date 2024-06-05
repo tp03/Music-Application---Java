@@ -787,6 +787,7 @@ public class AppFrame extends JFrame implements ActionListener {
             songListPanel.add(songPanel);
         }
         this.songListPanel.repaint();
+        this.pack();
     }
 
     public void drawSongs() {
