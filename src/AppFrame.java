@@ -210,6 +210,11 @@ public class AppFrame extends JFrame implements ActionListener {
         this.add(playlistPanel);
         this.add(userPanel);
         this.add(createTopPanel(titleLabel));
+
+        this.fileViewer = new FileViewerPanel();
+        this.fileViewer.setBounds(50, 135, 500, 830); // Set the position and size of the
+                                                      // panel
+        this.add(this.fileViewer);
     }
 
     private JScrollPane createScrollPane() {
@@ -310,11 +315,11 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     private JPanel createPlaylistPanel() {
-        JPanel panel = new JPanel(new BorderLayout()){
+        JPanel panel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                
+
             }
         };
 
@@ -336,22 +341,20 @@ public class AppFrame extends JFrame implements ActionListener {
         JScrollPane playlistScrollPane = new JScrollPane(playlistList);
         playlistScrollPane.setOpaque(true);
         playlistScrollPane.setBackground(panelColor);
-        playlistScrollPane.getViewport().setOpaque(true); 
+        playlistScrollPane.getViewport().setOpaque(true);
         playlistScrollPane.getViewport().setBackground(panelColor);
 
         JPanel playlistButtonPanel = new JPanel();
         playlistButtonPanel.add(createButton("Add Playlist", e -> {
             String playlistName = JOptionPane.showInputDialog("Enter playlist name:");
             if (playlistName != null && !playlistName.trim().isEmpty()) {
-                try{
+                try {
                     Playlist playlist = activeUser.createPlaylist(playlistName);
-                
+
                     if (playlist != null) {
                         playlistModel.addElement(playlist);
                     }
-                }
-                catch(Exception er)
-                {
+                } catch (Exception er) {
                     er.printStackTrace();
                 }
 
@@ -375,7 +378,7 @@ public class AppFrame extends JFrame implements ActionListener {
 
         panel.add(playlistScrollPane, BorderLayout.CENTER);
         panel.add(playlistButtonPanel, BorderLayout.SOUTH);
-        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2 + songWidth/2+40,
+        panel.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width / 2 + songWidth / 2 + 40,
                 searchPanel.getPreferredSize().height, panel.getPreferredSize().width,
                 Toolkit.getDefaultToolkit().getScreenSize().height - searchPanel.getPreferredSize().height * 6);
         return panel;
@@ -535,22 +538,21 @@ public class AppFrame extends JFrame implements ActionListener {
         String recordingPath = song.getRecordingPath();
         if (recordingPath != null && !recordingPath.isEmpty()) {
             song.wasClicked();
+            String textPath = song.getLyricsPath();
+            AppFrame.this.fileViewer.displayFileContent(new File(textPath));
+            AppFrame.this.fileViewer.repaint();
+
             try {
                 if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
                     AppFrame.this.clip.stop();
                     AppFrame.this.clip.close();
-                    AppFrame.this.remove(AppFrame.this.fileViewer);
+                    // AppFrame.this.remove(AppFrame.this.fileViewer);
                 }
                 File recordingFile = new File(recordingPath);
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
                 AppFrame.this.clip = AudioSystem.getClip();
                 AppFrame.this.clip.open(audioStream);
                 AppFrame.this.clip.start();
-                String textPath = song.getLyricsPath();
-                AppFrame.this.fileViewer = new FileViewerPanel(textPath);
-                AppFrame.this.fileViewer.setBounds(50, 135, 500, 830); // Set the position and size of the
-                                                                    // panel
-                AppFrame.this.add(AppFrame.this.fileViewer);
                 Timer timer = new Timer(100, timerAction);
                 timer.start();
                 drawCustom();
@@ -634,7 +636,11 @@ public class AppFrame extends JFrame implements ActionListener {
             String selectedColor = showColorDialog(this);
             if (!selectedColor.equals("")) {
                 this.activeUser.setpreferedColor(selectedColor);
-                initialize();
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                this.backgroundIcon = createScaledIcon("assets/" + this.activeUser.getpreferedColor(), screenSize.width,
+                        screenSize.height);
+                this.backgroundLabel.setIcon(this.backgroundIcon);
+                this.repaint(); // Odświeżenie ramki
             }
         }
     }
@@ -682,6 +688,26 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
+    private Song getLastSong() {
+        Song song = new Song(0);
+        try {
+            DatabaseConnection newCon = new DatabaseConnection();
+            Connection connection = newCon.MakeConnection();
+            String in_query2 = "SELECT COUNT(*) FROM song_data";
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(in_query2);
+            int idMax = 1;
+            while (resultSet.next()) {
+
+                idMax = resultSet.getInt("COUNT(*)");
+            }
+            song = new Song(idMax);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return song;
+    }
+
     private void handlePause() {
         // Implement the logic to pause or resume the song
         if (clip != null) {
@@ -709,20 +735,18 @@ public class AppFrame extends JFrame implements ActionListener {
     private void handleSearch() {
         // Implement the logic to perform a search
         String searchText = searchField.getText();
-        if (!searchText.isEmpty()) {
-            // Logic to search for songs based on searchText
-            // Example: Clear the song list panel and add search results
-            this.searchQuery = searchText;
-
-        }
-        drawCustom();
+        this.searchQuery = searchText;
+        drawSearchSong();
     }
 
     private void handleAddSong() {
         String songName = JOptionPane.showInputDialog("Enter song name:");
         String songAutor = JOptionPane.showInputDialog("Enter song author:");
         songImporter.ImportSong(songName, songAutor);
-        drawCustom();
+        Song new_song = getLastSong();
+        JPanel songPanel = createSongPanel(new_song);
+        this.songListPanel.add(songPanel);
+        this.songListPanel.repaint();
 
     }
 
@@ -739,6 +763,26 @@ public class AppFrame extends JFrame implements ActionListener {
         // JPanel playlistPanel = createPlaylistPanel();
         // this.add(playlistPanel);
         // this.playlistPanel = playlistPanel;
+    }
+
+    public void drawSearchSong() {
+        this.songListPanel.removeAll();
+        String inputText = this.searchQuery;
+        ArrayList<Song> songs;
+        if (inputText.equals("")) {
+            songs = createSongsArray();
+        } else {
+            SearchEngine searchEngine = new SearchEngine();
+            searchEngine.make_song_search(inputText);
+            songs = searchEngine.returned_songs;
+            searchEngine.make_author_search(inputText);
+            songs.addAll(searchEngine.returned_songs);
+        }
+        for (Song song : songs) {
+            JPanel songPanel = createSongPanel(song);
+            songListPanel.add(songPanel);
+        }
+        this.songListPanel.repaint();
     }
 
     public void drawSongs() {

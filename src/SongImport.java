@@ -83,8 +83,8 @@ public class SongImport {
             int rowsInserted = prepstat.executeUpdate();
 
             insert_query = "INSERT INTO SONG VALUES ("
-                    + this.id + ", '" + this.songName + "', '" + 100 +
-                    "', '" + this.id + "', '" + 200 + "')";
+                    + this.id + ", '" + this.songName + "', '" + 0 +
+                    "', '" + this.id + "', '" + 0 + "')";
 
             prepstat = connection.prepareStatement(insert_query);
 
