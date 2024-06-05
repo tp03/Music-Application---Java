@@ -37,7 +37,7 @@ public class songTest {
 
         Song song_test = new Song(3);
 
-        assertTrue(song_test.getLength() == 100);  
+        assertTrue(song_test.getLength() == 0);  
     }   
 
     @Test

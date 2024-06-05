@@ -13,14 +13,14 @@ public class Login_or_Register {
     private LoginFrame loginFrame;
     private AppFrame appFrame;
     private Spotify_user logged_user;
-    private IncorrectPassword inc_pass;
-    private UsedUsername used_user;
+    private Error inc_pass;
+    private Error used_user;
 
     Login_or_Register(LoginFrame loginFrame, AppFrame AppFrame, JButton loginbutton, JButton registerbutton) {
         this.appFrame = AppFrame;
         this.loginFrame = loginFrame;
-        this.inc_pass = new IncorrectPassword(this.loginFrame); 
-        this.used_user = new UsedUsername(this.loginFrame);
+        this.inc_pass = new Error(this.loginFrame, 0); 
+        this.used_user= new Error(this.loginFrame, 1);
         add_login_on_click(loginbutton);
         add_register_on_click(registerbutton);
 
@@ -67,7 +67,7 @@ public class Login_or_Register {
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.drawCustom();
             } catch (Exception e) {
-                this.used_user.showUsedUsername(this.loginFrame);
+                this.used_user.showErrorDialog(this.loginFrame, 1);
             }
         }
     }
@@ -88,7 +88,7 @@ public class Login_or_Register {
                 this.appFrame.setActiveUser(loggedUser());
                 appFrame.drawCustom();
             } catch (Exception e) {
-                this.inc_pass.showIncorrectPasswordDialog(this.loginFrame);
+                this.inc_pass.showErrorDialog(this.loginFrame, 0);
             }
         }
     }
