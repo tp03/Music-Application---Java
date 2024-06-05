@@ -6,14 +6,15 @@ import java.sql.PreparedStatement;
 
 public class UserCreator {
 
-    private int id;
+    private int id = 0;
     private String name;
     private String last_name;
     private String username;
     private String email;
     private String pass;
+    private int successful;
     
-    void created_user(String name, String last_name, String user_name, String email, String passw)
+    void created_user(String name, String last_name, String user_name, String email, String passw) throws Exception
     {
         this.name = name;
         this.last_name = last_name;
@@ -27,17 +28,18 @@ public class UserCreator {
         try{
             DatabaseConnection dc = new DatabaseConnection();
             connection = dc.MakeConnection();
-            if (connection != null)
-            {
-                System.out.println("Successful");
-            }
-            else
-                System.out.println("Error");
-
             String in_query2 = "SELECT MAX(user_id) FROM app_user";
             
             Statement stmt = connection.createStatement();
 
+            ResultSet check = stmt.executeQuery("Select * from app_user where nick like '" + this.username + "'");
+            if (!check.next()) {
+                successful = 1;
+            } else {
+                successful = 0;
+                throw new Exception("username already used");
+            }
+            
             ResultSet resultSet = stmt.executeQuery(in_query2);
 
             while (resultSet.next()) {
@@ -52,12 +54,6 @@ public class UserCreator {
             PreparedStatement prepstat = connection.prepareStatement(insert_query);
 
             int rowsInserted = prepstat.executeUpdate();
-            
-            if (rowsInserted > 0) {
-                System.out.println("G");
-            } else {
-                System.out.println("Nie G");
-            }
 
             connection.close();
 
@@ -66,6 +62,16 @@ public class UserCreator {
         {
             e.printStackTrace();
         }
+    }
+
+    int getId() {
+
+        return this.id;
+    }
+
+    int getSuccessful() {
+
+        return this.successful;
     }
 
 
