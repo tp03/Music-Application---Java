@@ -393,6 +393,19 @@ public class AppFrame extends JFrame implements ActionListener {
             songModel.addElement(song);
         }
 
+        songList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int index = songList.locationToIndex(e.getPoint());
+                    if (index != -1) {
+                        Song selectedSong = songModel.getElementAt(index);
+                        playSong(selectedSong);
+                    }
+                }
+            }
+        });
+
         JScrollPane songScrollPane = new JScrollPane(songList);
         dialog.add(songScrollPane, BorderLayout.CENTER);
 
@@ -509,36 +522,42 @@ public class AppFrame extends JFrame implements ActionListener {
                     popupMenu.show(songPanel, e.getX(), e.getY());
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
                     // Left-clicked
-                    String recordingPath = song.getRecordingPath();
-                    if (recordingPath != null && !recordingPath.isEmpty()) {
-                        song.wasClicked();
-                        try {
-                            if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
-                                AppFrame.this.clip.stop();
-                                AppFrame.this.clip.close();
-                                AppFrame.this.remove(AppFrame.this.fileViewer);
-                            }
-                            File recordingFile = new File(recordingPath);
-                            AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
-                            AppFrame.this.clip = AudioSystem.getClip();
-                            AppFrame.this.clip.open(audioStream);
-                            AppFrame.this.clip.start();
-                            String textPath = song.getLyricsPath();
-                            AppFrame.this.fileViewer = new FileViewerPanel(textPath);
-                            AppFrame.this.fileViewer.setBounds(50, 135, 500, 830); // Set the position and size of the
-                                                                                   // panel
-                            AppFrame.this.add(AppFrame.this.fileViewer);
-                            Timer timer = new Timer(100, timerAction);
-                            timer.start();
-                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
+                    playSong(song);
                 }
             }
         });
 
         return songPanel;
+    }
+
+    private void playSong(Song song)
+    {
+        String recordingPath = song.getRecordingPath();
+        if (recordingPath != null && !recordingPath.isEmpty()) {
+            song.wasClicked();
+            try {
+                if (AppFrame.this.clip != null && AppFrame.this.clip.isRunning()) {
+                    AppFrame.this.clip.stop();
+                    AppFrame.this.clip.close();
+                    AppFrame.this.remove(AppFrame.this.fileViewer);
+                }
+                File recordingFile = new File(recordingPath);
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(recordingFile);
+                AppFrame.this.clip = AudioSystem.getClip();
+                AppFrame.this.clip.open(audioStream);
+                AppFrame.this.clip.start();
+                String textPath = song.getLyricsPath();
+                AppFrame.this.fileViewer = new FileViewerPanel(textPath);
+                AppFrame.this.fileViewer.setBounds(50, 135, 500, 830); // Set the position and size of the
+                                                                    // panel
+                AppFrame.this.add(AppFrame.this.fileViewer);
+                Timer timer = new Timer(100, timerAction);
+                timer.start();
+                drawCustom();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     private void addToPlaylist(Song song) {
