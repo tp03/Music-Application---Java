@@ -17,7 +17,7 @@ public class Song {
     private String imagePath;
     private String recordingPath;
     private String lyricsPath;
-    private JLabel viewsLabel;
+    private JLabel viewsLabel = new JLabel(" Views: " + 0);
 
     public Song(int id) {
         this.id = id;
