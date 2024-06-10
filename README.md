@@ -1,3 +1,11 @@
+# Authors
+
+Adrian Kaźmierczuk, Antoni Kowalski, Marcin Połosak, Tomasz Zalewski - Warsaw University of Technology Faculty of Electronics and Information Technology
+
+# Technology
+
+Java 11, Oracle Database, JDBC
+
 # Spotysing
 
 Spotysing is an innovative application designed to allow users to enjoy their own recorded music. Here's a refined overview of its features and functionality:
@@ -17,7 +25,7 @@ After start-off of the app, you need to fill in the demands for registration pro
 
 
 ## Short explanation of Classes
-
+ni
 * App.java: The core class overseeing the application's functionality.
 * AppFrame.java: Class that is responsible for visual frame that user can see during listening to the music.
 * CustomButton.java: Interactive button that can be used in any actions initiated by user.
